@@ -10,7 +10,7 @@ namespace Boids {
             Instance = this;
         }
 
-        public readonly List<Boid> boid = new();
+        public readonly List<Boid> boids = new();
 
         [SerializeField] private GameObject boidPrefab;
         [SerializeField] private float spawnRange;
@@ -33,6 +33,7 @@ namespace Boids {
                 boidComponent.maxSpeed = maxSpeed;
                 boidComponent.maxTurnSpeed = maxTurnSpeed;
                 boidComponent.velocity = Random.insideUnitSphere;
+                boids.Add(boidComponent);
             }
             
         }

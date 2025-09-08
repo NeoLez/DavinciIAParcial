@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Boids {
     public class MovementAgent : MonoBehaviour {
@@ -11,6 +12,8 @@ namespace Boids {
                 velocity.Normalize();
                 velocity *= maxSpeed;
             }
+            
+            transform.rotation = Quaternion.Euler(0, 0, (float)(Math.Atan2(velocity.y, velocity.x) / Math.PI * 180));
 
             transform.position = (Vector2)transform.position + velocity * Time.deltaTime;
         }
