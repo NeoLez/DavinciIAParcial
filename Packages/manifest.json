@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "com.mackysoft.serializereference-extensions": "https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions",
+    "com.unity.ide.rider": "3.0.36",
+    "com.unity.textmeshpro": "3.0.9",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.physics2d": "1.0.0"
+  }
+}

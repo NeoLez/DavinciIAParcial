@@ -1,0 +1,69 @@
+{
+  "dependencies": {
+    "com.mackysoft.serializereference-extensions": {
+      "version": "https://github.com/mackysoft/Unity-SerializeReferenceExtensions.git?path=Assets/MackySoft/MackySoft.SerializeReferenceExtensions",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f938fc5d9a9ef46a1669289450d38e17cb39567c"
+    },
+    "com.unity.ext.nunit": {
+      "version": "1.0.6",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ide.rider": {
+      "version": "3.0.36",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ext.nunit": "1.0.6"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.textmeshpro": {
+      "version": "3.0.9",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ugui": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0"
+      }
+    },
+    "com.unity.modules.audio": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.imgui": {
+      "version": "1.0.0",
+      "depth": 2,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.physics2d": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.ui": {
+      "version": "1.0.0",
+      "depth": 2,
+      "source": "builtin",
+      "dependencies": {}
+    }
+  }
+}
