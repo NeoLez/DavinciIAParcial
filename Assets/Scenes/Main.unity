@@ -246,7 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: 5321120444330549303, guid: 68058882cd8e1d34f9f1823d29ef8638, type: 3}
   spawnRange: 5
-  maxSpeed: 2
+  maxSpeed: 5
   maxTurnSpeed: 0.03
   number: 50
   generateBoids: 1
