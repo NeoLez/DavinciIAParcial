@@ -301,7 +301,7 @@ MonoBehaviour:
   foodPickupRange: 0.5
   foodSpawnRate: 4
   generateBoids: 1
-  generateHunter: 0
+  generateHunter: 1
   patrolPoints:
   - {fileID: 738269793}
   - {fileID: 1039367021}
