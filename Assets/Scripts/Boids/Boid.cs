@@ -19,6 +19,8 @@ namespace Boids
         [SerializeField] private float circleBoundStrength;
 
         [SerializeField] private float fov;
+
+        [SerializeField] private bool highPerformanceMode;
         
         public bool log;
         private void Update() {
@@ -32,7 +34,10 @@ namespace Boids
             } else if (IsHunterNearby(out Hunter hunter)) {
                 AddVelocity(Flee(hunter.transform.position));
             } else if (AreBoidsNearby()) {
-                AddVelocity(Flocking());
+                if(highPerformanceMode)
+                    AddVelocity(FlockingHighPerformance());
+                else
+                    AddVelocity(Flocking());
             }
             else {
                 AddVelocity(RandomMovement());
@@ -116,8 +121,95 @@ namespace Boids
             }
             return Vector2.zero;
         }
+
+        private Vector2 Alignment() {
+            int alignmentCount = 0;
+            Vector2 alignmentSum = Vector2.zero;
+            foreach (var boid in Manager.instance.Boids) {
+                if (boid == this) continue;
+                Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;
+                float distance = toOther.magnitude;
+                if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= fov) {
+                    if (distance <= alignmentRadius) {
+                        alignmentCount++;
+                        alignmentSum += boid.velocity;
+                    }  
+                }
+            }
+            Vector2 alignmentSteering = Vector2.zero;
+            if (alignmentCount == 0) return alignmentSteering;
+            Vector2 desired = alignmentSum.normalized * maxSpeed;
+            alignmentSteering = Seek(desired + (Vector2)transform.position) * alignmentStrength;
+            return alignmentSteering;
+        }
+
+        private Vector2 Cohesion() {
+            int cohesionCount = 0;
+            Vector2 cohesionSum = Vector2.zero;
+            foreach (var boid in Manager.instance.Boids) {
+                if (boid == this) continue;
+                Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;
+                float distance = toOther.magnitude;
+                if (distance <= cohesionRadius && Vector2.Angle(velocity, boid.transform.position - transform.position) <= fov) {
+                    cohesionCount++;
+                    cohesionSum += (Vector2)boid.transform.position;
+                }
+            }
+            
+            Vector2 cohesionSteering = Vector2.zero;
+            if (cohesionCount == 0) return cohesionSteering;
+            Vector2 center = cohesionSum / cohesionCount;
+            cohesionSteering = Seek(center) * cohesionStrength;
+            return cohesionSteering;
+        }
+
+        private Vector2 Separation() {
+            int separationCount = 0;
+            Vector2 separationSum = Vector2.zero;
+
+            foreach (var boid in Manager.instance.Boids) {
+                if (boid == this) continue;
+                
+                Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;
+                float distance = toOther.magnitude;
+                
+                if (distance <= separationRadius) {
+                    separationCount++;
+                    Vector2 away = -toOther.normalized;
+                    float weight = separationRadius / distance;
+                    separationSum += away * weight;
+                }
+            }
+
+            Vector2 separationSteering = Vector2.zero;
+            if (separationCount == 0) return separationSteering;
+            separationSteering = Seek(separationSum + (Vector2)transform.position) * separationStrength;
+            return separationSteering;
+        }
         
         private Vector2 Flocking() {
+            Vector2 randomSteer = randomStrength * Random.insideUnitCircle;
+            return Separation() + Alignment() + Cohesion() + randomSteer;
+        }
+
+        private Vector2 _randomVector;
+        private void Awake() {
+            _randomVector = Random.insideUnitCircle;
+        }
+        
+        private Vector2 RandomMovement() {
+            if (Vector2.Angle(velocity, _randomVector) < 10 && velocity.magnitude > maxSpeed*0.95) {
+                _randomVector = Random.insideUnitCircle;
+            }
+
+            return Seek((Vector2)transform.position + _randomVector) * 0.15f;
+        }
+
+        public void Initialize(Vector2 initialVelocity) {
+            velocity = initialVelocity;
+        }
+
+        private Vector2 FlockingHighPerformance() {
             int alignmentCount = 0, separationCount = 0, cohesionCount = 0;
             Vector2 alignmentSum = Vector2.zero, separationSum = Vector2.zero, cohesionSum = Vector2.zero;
 
@@ -170,23 +262,6 @@ namespace Boids
             
             Vector2 randomSteer = randomStrength * Random.insideUnitCircle;
             return separationSteering + alignmentSteering + cohesionSteering + randomSteer;
-        }
-
-        private Vector2 _randomVector;
-        private void Awake() {
-            _randomVector = Random.insideUnitCircle;
-        }
-        
-        private Vector2 RandomMovement() {
-            if (Vector2.Angle(velocity, _randomVector) < 10 && velocity.magnitude > maxSpeed*0.95) {
-                _randomVector = Random.insideUnitCircle;
-            }
-
-            return Seek((Vector2)transform.position + _randomVector) * 0.15f;
-        }
-
-        public void Initialize(Vector2 initialVelocity) {
-            velocity = initialVelocity;
         }
     }
 }

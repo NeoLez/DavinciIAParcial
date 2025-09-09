@@ -49,7 +49,7 @@ MonoBehaviour:
   maxSpeed: 12
   maxTurnSpeed: 0.35
   foodDetectionRange: 10
-  hunterDetectionRange: 16
+  hunterDetectionRange: 14
   alignmentRadius: 4
   separationRadius: 1.5
   cohesionRadius: 6
@@ -60,6 +60,7 @@ MonoBehaviour:
   circleBoundRadius: 35
   circleBoundStrength: 1.1
   fov: 100
+  highPerformanceMode: 1
   log: 0
 --- !u!1 &8857841278618341031
 GameObject:
