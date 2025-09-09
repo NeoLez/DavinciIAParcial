@@ -38,7 +38,6 @@ namespace Boids.HunterBehaviours {
 
         public void OnUpdate(float _) {
             HandlePatrol();
-
             HandleBoidSight();
         }
 
@@ -58,8 +57,8 @@ namespace Boids.HunterBehaviours {
                 _currentTargetIndex = (_currentTargetIndex + 1) % _patrolPositions.Count;
             }
 
-            Target t = _patrolPositions[_currentTargetIndex];
-            _hunter.AddVelocity(_hunter.Arrive(t.position, t.radius));
+            Target target = _patrolPositions[_currentTargetIndex];
+            _hunter.AddVelocity(_hunter.Arrive(target.position, target.radius));
         }
     }
 }

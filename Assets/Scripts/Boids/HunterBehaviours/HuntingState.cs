@@ -24,36 +24,37 @@ namespace Boids.HunterBehaviours {
         }
 
         public void OnUpdate(float deltaTime) {
-            var boids = Manager.instance.Boids;
-            
-            float minimumDistance = Single.MaxValue;
-            Boid targetedBoid = null;
-            foreach (var boid in boids) {
-                float distance = Vector2.Distance(_hunter.transform.position, boid.transform.position);
-                if (distance < minimumDistance && distance <= _viewRange) {
-                    minimumDistance = distance;
-                    targetedBoid = boid;
-                }
-            }
-
             if (!_hunter.HasEnergy()) {
                 _stateMachine.ChangeState(HunterStates.Rest);
                 return;
             }
+            
+            float minimumDistance = _viewRange;
+            Boid targetedBoid = FindClosestBoid(ref minimumDistance);
             if (targetedBoid == null) {
                 _stateMachine.ChangeState(HunterStates.Patrol);
                 return;
             }
             
-            
-            
-            float distanceToTargetBoid = Vector2.Distance(_hunter.transform.position, targetedBoid.transform.position);
-            if (distanceToTargetBoid < _eatDistance) {
+            _hunter.AddVelocity(_hunter.Pursue(targetedBoid.transform.position, targetedBoid.velocity, minimumDistance/_hunter.GetMaxSpeed()));
+            if (minimumDistance < _eatDistance) {
                 Manager.instance.DeleteBoid(targetedBoid);
                 Manager.instance.amountKilled++;
             }
-            _hunter.AddVelocity(_hunter.Pursue(targetedBoid.transform.position, targetedBoid.velocity, distanceToTargetBoid/_hunter.GetMaxSpeed()));
             _hunter.SpendEnergy(deltaTime);
+        }
+
+        private Boid FindClosestBoid(ref float minimumDistance) {
+            Boid targetedBoid = null;
+            foreach (var boid in Manager.instance.Boids) {
+                float distance = Vector2.Distance(_hunter.transform.position, boid.transform.position);
+                if (distance < minimumDistance) {
+                    minimumDistance = distance;
+                    targetedBoid = boid;
+                }
+            }
+
+            return targetedBoid;
         }
     }
 }
