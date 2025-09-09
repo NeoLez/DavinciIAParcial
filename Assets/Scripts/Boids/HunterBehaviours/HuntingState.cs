@@ -5,11 +5,11 @@ using UnityEngine;
 namespace Boids.HunterBehaviours {
     public class HuntingState : IState<HunterStates> {
         private StateMachine<HunterStates> _stateMachine;
-        private Boids.Hunter _hunter;
+        private Hunter _hunter;
         private float _viewRange;
         private float _eatDistance;
 
-        public HuntingState(StateMachine<HunterStates> stateMachine, Boids.Hunter hunter, float viewRange, float eatDistance) {
+        public HuntingState(StateMachine<HunterStates> stateMachine, Hunter hunter, float viewRange, float eatDistance) {
             _stateMachine = stateMachine;
             _hunter = hunter;
             _viewRange = viewRange;

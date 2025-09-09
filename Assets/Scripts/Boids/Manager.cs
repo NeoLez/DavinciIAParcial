@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using DefaultNamespace.Utils;
 using UnityEngine;
+using Utils;
 using Random = UnityEngine.Random;
 
 namespace Boids {
@@ -49,7 +49,7 @@ namespace Boids {
                 GenerateHunter();
             }
 
-            if (_foodTimer.hasFinished()) {
+            if (_foodTimer.HasFinished()) {
                 _foodTimer.AddTime(foodSpawnRate);
                 SpawnFood();
             }

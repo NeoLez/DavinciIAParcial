@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace DefaultNamespace.Utils {
+namespace Utils {
     public class Timer {
-        private float waitUntil;
+        private float _waitUntil;
 
         public Timer(float duration) {
             Start(duration);
@@ -10,16 +10,16 @@ namespace DefaultNamespace.Utils {
 
         public Timer() { }
 
-        public bool hasFinished() {
-            return Time.time >= waitUntil;
+        public bool HasFinished() {
+            return Time.time >= _waitUntil;
         }
 
         public void AddTime(float extraTime) {
-            waitUntil += extraTime;
+            _waitUntil += extraTime;
         }
 
         public void Start(float duration) {
-            waitUntil = Time.time + duration;
+            _waitUntil = Time.time + duration;
         }
     }
 }

@@ -6,13 +6,13 @@ using UnityEngine;
 namespace Boids.HunterBehaviours {
     public class PatrolState : IState<HunterStates> {
         private StateMachine<HunterStates> _stateMachine;
-        private Boids.Hunter _hunter;
+        private Hunter _hunter;
         private List<Target> _patrolPositions;
         private int _currentTargetIndex;
         private float _targetMinimumDistance;
         private float _viewRange;
         
-        public PatrolState(StateMachine<HunterStates> stateMachine, Boids.Hunter hunter, List<Target> patrolPositions, float targetMinimumDistance, float viewRange) {
+        public PatrolState(StateMachine<HunterStates> stateMachine, Hunter hunter, List<Target> patrolPositions, float targetMinimumDistance, float viewRange) {
             _stateMachine = stateMachine;
             _hunter = hunter;
             _patrolPositions = patrolPositions;
