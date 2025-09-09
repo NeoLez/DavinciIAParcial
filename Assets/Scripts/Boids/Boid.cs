@@ -20,6 +20,8 @@ namespace Boids
 
         [SerializeField] private float circleBoundRadius;
         [SerializeField] private float circleBoundStrength;
+
+        public bool log;
         private void Update() {
             if (IsFoodNearby(out Target food)) {
                 if (Vector2.Distance(food.position, transform.position) <= food.radius) {
@@ -37,6 +39,8 @@ namespace Boids
             else {
                 velocity += RandomMovement();
             }
+            
+            velocity += AvoidEscapingBounds();
 
             ProcessMovement();
         }
@@ -94,15 +98,16 @@ namespace Boids
 
             return false;
         }
-        
-        private Vector2 Flocking() {
-            int alignmentCount = 0, separationCount = 0, cohesionCount = 0;
-            Vector2 alignmentSum = Vector2.zero, separationSum = Vector2.zero, cohesionSum = Vector2.zero;
 
+        public Vector2 AvoidEscapingBounds() {
             if (transform.position.magnitude > circleBoundRadius) {
                 return Seek(Vector2.zero) * circleBoundStrength;
             }
-            
+            return Vector2.zero;
+        }
+        private Vector2 Flocking() {
+            int alignmentCount = 0, separationCount = 0, cohesionCount = 0;
+            Vector2 alignmentSum = Vector2.zero, separationSum = Vector2.zero, cohesionSum = Vector2.zero;
 
             foreach (var boid in Manager.Instance.boids) {
                 if (boid == this) continue;
@@ -150,8 +155,17 @@ namespace Boids
             return separationSteering + alignmentSteering + cohesionSteering + randomSteer;
         }
 
+        private Vector2 randomVector;
+        private void Awake() {
+            randomVector = Random.insideUnitCircle;
+        }
+        
         private Vector2 RandomMovement() {
-            return Vector2.zero;
+            if (Vector2.Angle(velocity, randomVector) < 10 && velocity.magnitude > maxSpeed*0.95) {
+                randomVector = Random.insideUnitCircle;
+            }
+
+            return Seek((Vector2)transform.position + randomVector) * 0.15f;
         }
     }
 }
