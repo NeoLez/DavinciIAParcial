@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5440234024235575572}
-  - component: {fileID: 5711595556649788421}
+  - component: {fileID: 1165508679350379678}
   m_Layer: 0
-  m_Name: Boid
+  m_Name: Hunter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 4262926099494134893}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5711595556649788421
+--- !u!114 &1165508679350379678
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,28 +42,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5321120444330549303}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d82775c71d98dd4b83672741272ed6f, type: 3}
+  m_Script: {fileID: 11500000, guid: b4e4692cc3934e4bbd256003605031c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: {x: 0, y: 0}
   maxSpeed: 0
   maxTurnSpeed: 0
-  seekPos: {fileID: 0}
-  behaviours: []
-  foodDetectionRange: 10
-  hunterDetectionRange: 7
-  alignmentRadius: 2
-  separationRadius: 1
-  cohesionRadius: 3
-  alignmentStrength: 0.626
-  separationStrength: 0.796
-  cohesionStrength: 0.415
-  randomStrength: 0.1
-  circleBoundRadius: 25
-  circleBoundStrength: 1
-  references:
-    version: 2
-    RefIds: []
 --- !u!1 &8857841278618341031
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,7 +59,7 @@ GameObject:
   - component: {fileID: 4262926099494134893}
   - component: {fileID: 8126359310920075020}
   m_Layer: 0
-  m_Name: BoidVisual
+  m_Name: HunterVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,7 +122,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f4d8570cf2633504999f92bd96717a22, type: 3}
-  m_Color: {r: 0.5888482, g: 0.8156342, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.53224444, b: 0.53224444, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

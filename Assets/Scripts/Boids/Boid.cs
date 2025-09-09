@@ -1,11 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Boids
 {
     public class Boid : MovementAgent {
         [SerializeField] private Transform seekPos;
         [SubclassSelector] [SerializeReference] private List<Behaviour> behaviours;
+        [SerializeField] private float foodDetectionRange;
+        [SerializeField] private float hunterDetectionRange;
         [SerializeField] private float alignmentRadius;
         [SerializeField] private float separationRadius;
         [SerializeField] private float cohesionRadius;
@@ -13,12 +17,96 @@ namespace Boids
         [Range(0,1)] [SerializeField] private float separationStrength;
         [Range(0,1)] [SerializeField] private float cohesionStrength;
         [Range(0,1)] [SerializeField] private float randomStrength;
+
+        [SerializeField] private float circleBoundRadius;
+        [SerializeField] private float circleBoundStrength;
         private void Update() {
+            if (IsFoodNearby(out Target food)) {
+                if (Vector2.Distance(food.position, transform.position) <= food.radius) {
+                    Manager.Instance.foodItems.Remove(food);
+                    Destroy(food.gameObject);
+                }
+                else {
+                    velocity += Arrive(food.position, food.radius);
+                }
+            } else if (IsHunterNearby(out Hunter hunter)) {
+                velocity += Flee(hunter.transform.position);
+            } else if (AreBoidsNearby()) {
+                velocity += Flocking();
+            }
+            else {
+                velocity += RandomMovement();
+            }
+
+            ProcessMovement();
+        }
+
+        private bool IsFoodNearby(out Target food) {
+            Target closestFood = null;
+            float closestDistance = Single.MaxValue;
+            foreach (var foodItem in Manager.Instance.foodItems) {
+                float distance = Vector2.Distance(transform.position, foodItem.position);
+                if (distance <= closestDistance) {
+                    closestFood = foodItem;
+                    closestDistance = distance;
+                }
+            }
+
+            if (closestFood != null && closestDistance <= foodDetectionRange) {
+                food = closestFood;
+                return true;
+            }
+
+            food = null;
+            return false;
+        }
+
+        private bool IsHunterNearby(out Hunter hunter) {
+            float closestDistance = Single.MaxValue;
+            Hunter newHunter = null;
+            
+            foreach (var h in Manager.Instance.hunters) {
+                float distance = Vector2.Distance(transform.position, h.transform.position);
+                if (distance < closestDistance) {
+                    newHunter = h;
+                    closestDistance = distance;
+                }
+            }
+
+            if (closestDistance < Single.MaxValue) {
+                if (Vector2.Distance(newHunter.transform.position, transform.position) <= hunterDetectionRange) {
+                    hunter = newHunter;
+                    return true;
+                }
+            }
+
+            hunter = null;
+            return false;
+        }
+
+        private bool AreBoidsNearby() {
+            foreach (var boid in Manager.Instance.boids) {
+                if (boid == this) continue;
+                if (Vector2.Distance(boid.transform.position, transform.position) < Math.Max(alignmentRadius, cohesionRadius)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
+        private Vector2 Flocking() {
             int alignmentCount = 0, separationCount = 0, cohesionCount = 0;
             Vector2 alignmentSum = Vector2.zero, separationSum = Vector2.zero, cohesionSum = Vector2.zero;
 
+            if (transform.position.magnitude > circleBoundRadius) {
+                return Seek(Vector2.zero) * circleBoundStrength;
+            }
+            
+
             foreach (var boid in Manager.Instance.boids) {
                 if (boid == this) continue;
+                
                 Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;
                 float distance = toOther.magnitude;
                 
@@ -43,13 +131,13 @@ namespace Boids
 
             Vector2 separationSteering = Vector2.zero;
             if (separationCount > 0) {
-                separationSteering = Seek(separationSum) * separationStrength;
+                separationSteering = Seek(separationSum + (Vector2)transform.position) * separationStrength;
             }
 
             Vector2 alignmentSteering = Vector2.zero;
             if (alignmentCount > 0) {
                 Vector2 desired = alignmentSum.normalized * maxSpeed;
-                alignmentSteering = Seek(desired) * alignmentStrength;
+                alignmentSteering = Seek(desired + (Vector2)transform.position) * alignmentStrength;
             }
 
             Vector2 cohesionSteering = Vector2.zero;
@@ -59,9 +147,11 @@ namespace Boids
             }
             
             Vector2 randomSteer = randomStrength * Random.insideUnitCircle;
-            velocity += separationSteering + alignmentSteering + cohesionSteering + randomSteer;
+            return separationSteering + alignmentSteering + cohesionSteering + randomSteer;
+        }
 
-            ProcessMovement();
+        private Vector2 RandomMovement() {
+            return Vector2.zero;
         }
     }
 }

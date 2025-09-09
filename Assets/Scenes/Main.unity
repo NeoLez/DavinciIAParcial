@@ -246,10 +246,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: 5321120444330549303, guid: 68058882cd8e1d34f9f1823d29ef8638, type: 3}
   spawnRange: 5
-  maxSpeed: 5
-  maxTurnSpeed: 0.03
-  number: 50
+  maxSpeed: 12
+  maxTurnSpeed: 0.3
+  number: 100
+  hunterPrefab: {fileID: 5321120444330549303, guid: 884f044be00a7714e88abae5c6ca61f5, type: 3}
+  foodPrefab: {fileID: 5321120444330549303, guid: 16a37212167c1ed4393102c8b67332af, type: 3}
+  foodSpawnRange: 20
+  foodPickupRange: 0.5
+  foodSpawnRate: 4
   generateBoids: 1
+  generateHunter: 0
 --- !u!4 &832442606
 Transform:
   m_ObjectHideFlags: 0

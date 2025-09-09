@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5440234024235575572}
-  - component: {fileID: 5711595556649788421}
+  - component: {fileID: 3227005062981116794}
   m_Layer: 0
-  m_Name: Boid
+  m_Name: Food
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ Transform:
   - {fileID: 4262926099494134893}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5711595556649788421
+--- !u!114 &3227005062981116794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,28 +42,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5321120444330549303}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d82775c71d98dd4b83672741272ed6f, type: 3}
+  m_Script: {fileID: 11500000, guid: 56cefd95cdea44c4a893dc7f183aeb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 0}
-  maxSpeed: 0
-  maxTurnSpeed: 0
-  seekPos: {fileID: 0}
-  behaviours: []
-  foodDetectionRange: 10
-  hunterDetectionRange: 7
-  alignmentRadius: 2
-  separationRadius: 1
-  cohesionRadius: 3
-  alignmentStrength: 0.626
-  separationStrength: 0.796
-  cohesionStrength: 0.415
-  randomStrength: 0.1
-  circleBoundRadius: 25
-  circleBoundStrength: 1
-  references:
-    version: 2
-    RefIds: []
+  position: {x: 0, y: 0}
+  radius: 1.5
 --- !u!1 &8857841278618341031
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,7 +58,7 @@ GameObject:
   - component: {fileID: 4262926099494134893}
   - component: {fileID: 8126359310920075020}
   m_Layer: 0
-  m_Name: BoidVisual
+  m_Name: FoodVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,8 +74,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.7077476, w: 0.70646536}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.3, z: 0.3}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 75, y: 75, z: 75}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5440234024235575572}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90.104}
@@ -137,12 +120,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f4d8570cf2633504999f92bd96717a22, type: 3}
-  m_Color: {r: 0.5888482, g: 0.8156342, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 99aaee170a521e049a7c8192e0c5b020, type: 3}
+  m_Color: {r: 0.5882353, g: 1, b: 0.6001219, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2.56, y: 2.56}
+  m_Size: {x: 0.01, y: 0.01}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
