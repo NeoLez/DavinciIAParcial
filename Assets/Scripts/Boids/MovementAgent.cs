@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace Boids {
     public class MovementAgent : MonoBehaviour {
-        [SerializeField] public Vector2 velocity;
-        [SerializeField] public float maxSpeed;
-        [SerializeField] public float maxTurnSpeed;
+        public Vector2 velocity; //CHANGING THIS TO A PROPERTY MAKES EVERYTHING EXPLODE :3
+        [SerializeField] protected float maxSpeed;
+        [SerializeField] protected float maxTurnSpeed;
         
         protected void ProcessMovement() {
             if (velocity.magnitude > maxSpeed) {
@@ -18,7 +18,7 @@ namespace Boids {
             transform.position = (Vector2)transform.position + velocity * Time.deltaTime;
         }
         
-        protected Vector2 Seek(Vector2 target) {
+        public Vector2 Seek(Vector2 target) {
             Vector2 desiredVelocity = target - (Vector2)transform.position;
             desiredVelocity.Normalize();
             desiredVelocity *= maxSpeed;
@@ -32,26 +32,43 @@ namespace Boids {
             return turnVector;
         }
 
-        protected Vector2 Arrive(Vector2 target, float radius) {
+        public Vector2 Arrive(Vector2 target, float radius) {
             Vector2 difference = target - (Vector2)transform.position;
             float distance = difference.magnitude;
 
             if (distance > radius) return Seek(target);
 
-            Vector2 desiredVelocity = difference.normalized * maxSpeed * (distance / radius);
+            Vector2 desiredVelocity;
+            if(radius == 0)
+                desiredVelocity = difference.normalized * maxSpeed;
+            else
+                desiredVelocity = difference.normalized * (maxSpeed * distance / radius);
+            
             Vector2 steering = desiredVelocity - velocity;
             steering = Vector3.ClampMagnitude(steering, maxTurnSpeed);
             return steering;
         }
         
-        protected Vector2 Flee(Vector2 target) {
+        public Vector2 Flee(Vector2 target) {
             return -Seek(target);
         }
-        protected Vector2 Pursue(Vector2 target, Vector2 targetSpeed, float predictionTime) {
+        public Vector2 Pursue(Vector2 target, Vector2 targetSpeed, float predictionTime) {
             return Seek(target + targetSpeed * predictionTime);
         }
-        protected Vector2 Evade(Vector2 target, Vector2 targetSpeed, float predictionTime) {
+        public Vector2 Evade(Vector2 target, Vector2 targetSpeed, float predictionTime) {
             return -Pursue(target, targetSpeed, predictionTime);
+        }
+
+        public void AddVelocity(Vector2 velocityToAdd) {
+            velocity += velocityToAdd;
+        }
+
+        public float GetMaxSpeed() {
+            return maxSpeed;
+        }
+
+        public float GetMaxTurnSpeed() {
+            return maxTurnSpeed;
         }
     }
 }

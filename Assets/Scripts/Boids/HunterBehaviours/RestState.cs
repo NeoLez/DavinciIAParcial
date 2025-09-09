@@ -4,10 +4,10 @@ using Utils;
 
 namespace Boids.HunterBehaviours {
     public class RestState : IState<HunterStates> {
-        private StateMachine<HunterStates> _stateMachine;
-        private Hunter _hunter;
-        private Timer _recoveryTimer;
-        private float _timeToRecovery;
+        private readonly StateMachine<HunterStates> _stateMachine;
+        private readonly Hunter _hunter;
+        private readonly Timer _recoveryTimer;
+        private readonly float _timeToRecovery;
 
         public RestState(StateMachine<HunterStates> stateMachine, Hunter hunter, float timeToRecovery) {
             _stateMachine = stateMachine;

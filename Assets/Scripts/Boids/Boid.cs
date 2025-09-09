@@ -33,15 +33,15 @@ namespace Boids
                     velocity += Arrive(food.position, food.radius);
                 }
             } else if (IsHunterNearby(out Hunter hunter)) {
-                velocity += Flee(hunter.transform.position);
+                AddVelocity(Flee(hunter.transform.position));
             } else if (AreBoidsNearby()) {
-                velocity += Flocking();
+                AddVelocity(Flocking());
             }
             else {
-                velocity += RandomMovement();
+                AddVelocity(RandomMovement());
             }
             
-            velocity += AvoidEscapingBounds();
+            AddVelocity(AvoidEscapingBounds());
 
             ProcessMovement();
         }
@@ -112,6 +112,7 @@ namespace Boids
             }
             return Vector2.zero;
         }
+        
         private Vector2 Flocking() {
             int alignmentCount = 0, separationCount = 0, cohesionCount = 0;
             Vector2 alignmentSum = Vector2.zero, separationSum = Vector2.zero, cohesionSum = Vector2.zero;
@@ -167,17 +168,21 @@ namespace Boids
             return separationSteering + alignmentSteering + cohesionSteering + randomSteer;
         }
 
-        private Vector2 randomVector;
+        private Vector2 _randomVector;
         private void Awake() {
-            randomVector = Random.insideUnitCircle;
+            _randomVector = Random.insideUnitCircle;
         }
         
         private Vector2 RandomMovement() {
-            if (Vector2.Angle(velocity, randomVector) < 10 && velocity.magnitude > maxSpeed*0.95) {
-                randomVector = Random.insideUnitCircle;
+            if (Vector2.Angle(velocity, _randomVector) < 10 && velocity.magnitude > maxSpeed*0.95) {
+                _randomVector = Random.insideUnitCircle;
             }
 
-            return Seek((Vector2)transform.position + randomVector) * 0.15f;
+            return Seek((Vector2)transform.position + _randomVector) * 0.15f;
+        }
+
+        public void Initialize(Vector2 initialVelocity) {
+            velocity = initialVelocity;
         }
     }
 }

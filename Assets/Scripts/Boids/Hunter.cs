@@ -30,14 +30,6 @@ namespace Boids {
             ProcessMovement();
         }
 
-        public new void Arrive(Vector2 target, float radius) {
-            velocity += base.Arrive(target, radius);
-        }
-
-        public new void Pursue(Vector2 target, Vector2 targetSpeed, float predictionTime) {
-            velocity += base.Pursue(target, targetSpeed, predictionTime);
-        }
-
         public void StopMoving() {
             velocity *= 1 - (stopSlowdownSpeed * Time.deltaTime);
         }

@@ -67,7 +67,7 @@ namespace Boids {
             for (int i = 0; i < number; i++) {
                 GameObject boid = Instantiate(boidPrefab, Random.insideUnitCircle * spawnRange, Quaternion.identity);
                 Boid boidComponent = boid.GetComponent<Boid>();
-                boidComponent.velocity = Random.insideUnitSphere;
+                boidComponent.Initialize(Random.insideUnitCircle);
                 Boids.Add(boidComponent);
             }
         }

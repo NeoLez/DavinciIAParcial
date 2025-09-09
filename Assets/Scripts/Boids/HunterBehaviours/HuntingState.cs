@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Boids.HunterBehaviours {
     public class HuntingState : IState<HunterStates> {
-        private StateMachine<HunterStates> _stateMachine;
-        private Hunter _hunter;
-        private float _viewRange;
-        private float _eatDistance;
+        private readonly StateMachine<HunterStates> _stateMachine;
+        private readonly Hunter _hunter;
+        private readonly float _viewRange;
+        private readonly float _eatDistance;
 
         public HuntingState(StateMachine<HunterStates> stateMachine, Hunter hunter, float viewRange, float eatDistance) {
             _stateMachine = stateMachine;
@@ -52,7 +52,7 @@ namespace Boids.HunterBehaviours {
                 Manager.instance.DeleteBoid(targetedBoid);
                 Manager.instance.amountKilled++;
             }
-            _hunter.Pursue(targetedBoid.transform.position, targetedBoid.velocity, distanceToTargetBoid/_hunter.maxSpeed);
+            _hunter.AddVelocity(_hunter.Pursue(targetedBoid.transform.position, targetedBoid.velocity, distanceToTargetBoid/_hunter.GetMaxSpeed()));
             _hunter.SpendEnergy(deltaTime);
         }
     }
