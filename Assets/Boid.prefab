@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: {x: 0, y: 0}
-  maxSpeed: 0
-  maxTurnSpeed: 0
+  maxSpeed: 12
+  maxTurnSpeed: 0.3
   seekPos: {fileID: 0}
   foodDetectionRange: 10
   hunterDetectionRange: 10
