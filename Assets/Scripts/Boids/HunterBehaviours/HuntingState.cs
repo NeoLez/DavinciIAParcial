@@ -41,7 +41,7 @@ namespace Boids.HunterBehaviours {
                 Manager.instance.DeleteBoid(targetedBoid);
                 Manager.instance.amountKilled++;
             }
-            _hunter.SpendEnergy(deltaTime);
+            _hunter.AddEnergy(-deltaTime);
         }
 
         private Boid FindClosestBoid(ref float minimumDistance) {

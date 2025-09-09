@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: {x: 0, y: 0}
-  maxSpeed: 13
-  maxTurnSpeed: 0.5
+  maxSpeed: 16
+  maxTurnSpeed: 0.6
   patrolPositions: []
   timeToRecovery: 4
   minimumPatrolPointDistance: 0.1

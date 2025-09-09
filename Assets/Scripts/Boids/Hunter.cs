@@ -38,8 +38,11 @@ namespace Boids {
             energy = maxEnergy;
         }
 
-        public void SpendEnergy(float energyToSpend) {
-            energy -= energyToSpend;
+        public void AddEnergy(float energyToAdd) {
+            float newEnegy = energy + energyToAdd;
+            if (newEnegy > maxEnergy)
+                newEnegy = maxEnergy;
+            energy += newEnegy;
         }
 
         public bool HasEnergy() {

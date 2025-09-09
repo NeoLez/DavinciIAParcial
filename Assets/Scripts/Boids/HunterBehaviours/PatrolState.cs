@@ -36,8 +36,9 @@ namespace Boids.HunterBehaviours {
         public void OnExit() {
         }
 
-        public void OnUpdate(float _) {
+        public void OnUpdate(float deltaTime) {
             HandlePatrol();
+            _hunter.AddEnergy(deltaTime);
             HandleBoidSight();
         }
 

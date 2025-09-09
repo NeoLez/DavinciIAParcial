@@ -24,13 +24,10 @@ namespace Boids
         private void Update() {
             if (IsFoodNearby(out Target food)) {
                 if (Vector2.Distance(food.position, transform.position) <= food.radius) {
-                    Manager.instance.FoodItems.Remove(food);
-                    Destroy(food.gameObject);
-                    Reproduce();
-                    Manager.instance.amountBorn++;
+                    ConsumeFood(food);
                 }
                 else {
-                    velocity += Arrive(food.position, food.radius);
+                    AddVelocity(Arrive(food.position, food.radius));
                 }
             } else if (IsHunterNearby(out Hunter hunter)) {
                 AddVelocity(Flee(hunter.transform.position));
@@ -46,6 +43,13 @@ namespace Boids
             ProcessMovement();
         }
 
+        private void ConsumeFood(Target food) {
+            Manager.instance.FoodItems.Remove(food);
+            Destroy(food.gameObject);
+            Reproduce();
+            Manager.instance.amountBorn++;
+        }
+        
         private void Reproduce() {
             GameObject newBoid = Instantiate(gameObject);
             newBoid.transform.position += (Vector3)Random.insideUnitCircle * 0.01f;
