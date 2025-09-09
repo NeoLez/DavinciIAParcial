@@ -47,11 +47,11 @@ namespace Boids {
         protected Vector2 Flee(Vector2 target) {
             return -Seek(target);
         }
-        protected Vector2 Pursuit(Vector2 target, Vector2 targetSpeed, float predictionTime) {
+        protected Vector2 Pursue(Vector2 target, Vector2 targetSpeed, float predictionTime) {
             return Seek(target + targetSpeed * predictionTime);
         }
         protected Vector2 Evade(Vector2 target, Vector2 targetSpeed, float predictionTime) {
-            return -Pursuit(target, targetSpeed, predictionTime);
+            return -Pursue(target, targetSpeed, predictionTime);
         }
     }
 }

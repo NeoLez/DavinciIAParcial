@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DefaultNamespace.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -31,6 +32,7 @@ namespace Boids {
         
         [SerializeField] private bool generateBoids;
         [SerializeField] private bool generateHunter;
+        [SerializeField] private List<Target> patrolPoints;
         
         private void Update() {
             if (generateBoids) {
@@ -67,8 +69,22 @@ namespace Boids {
             }
         }
 
+        private List<Boid> boidsToDelete = new();
+        public void DeleteBoid(Boid boid) {
+            boidsToDelete.Add(boid);
+        }
+
+        private void LateUpdate() {
+            foreach (var boidToDelete in boidsToDelete) {
+                boids.Remove(boidToDelete);
+                Destroy(boidToDelete.gameObject);
+            }
+            boidsToDelete.Clear();
+        }
+
         public void GenerateHunter() {
             GameObject hunter = Instantiate(hunterPrefab);
+            hunter.GetComponent<Hunter>().SetPatrolPositions(new List<Target>(patrolPoints));
             hunters.Add(hunter.GetComponent<Hunter>());
         }
     }

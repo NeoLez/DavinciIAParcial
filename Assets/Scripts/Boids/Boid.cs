@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,7 +6,6 @@ namespace Boids
 {
     public class Boid : MovementAgent {
         [SerializeField] private Transform seekPos;
-        [SubclassSelector] [SerializeReference] private List<Behaviour> behaviours;
         [SerializeField] private float foodDetectionRange;
         [SerializeField] private float hunterDetectionRange;
         [SerializeField] private float alignmentRadius;
@@ -80,7 +78,7 @@ namespace Boids
             }
 
             if (closestDistance < Single.MaxValue) {
-                if (Vector2.Distance(newHunter.transform.position, transform.position) <= hunterDetectionRange) {
+                if (Vector2.Distance(newHunter!.transform.position, transform.position) <= hunterDetectionRange) {
                     hunter = newHunter;
                     return true;
                 }

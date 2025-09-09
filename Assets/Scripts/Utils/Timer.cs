@@ -5,8 +5,10 @@ namespace DefaultNamespace.Utils {
         private float waitUntil;
 
         public Timer(float duration) {
-            waitUntil = Time.time + duration;
+            Start(duration);
         }
+
+        public Timer() { }
 
         public bool hasFinished() {
             return Time.time >= waitUntil;
@@ -14,6 +16,10 @@ namespace DefaultNamespace.Utils {
 
         public void AddTime(float extraTime) {
             waitUntil += extraTime;
+        }
+
+        public void Start(float duration) {
+            waitUntil = Time.time + duration;
         }
     }
 }
