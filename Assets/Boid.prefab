@@ -49,9 +49,8 @@ MonoBehaviour:
   maxSpeed: 0
   maxTurnSpeed: 0
   seekPos: {fileID: 0}
-  behaviours: []
   foodDetectionRange: 10
-  hunterDetectionRange: 7
+  hunterDetectionRange: 10
   alignmentRadius: 4
   separationRadius: 1.5
   cohesionRadius: 6
@@ -63,9 +62,6 @@ MonoBehaviour:
   circleBoundStrength: 1.1
   fov: 100
   log: 0
-  references:
-    version: 2
-    RefIds: []
 --- !u!1 &8857841278618341031
 GameObject:
   m_ObjectHideFlags: 0

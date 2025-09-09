@@ -299,13 +299,15 @@ MonoBehaviour:
   foodPrefab: {fileID: 5321120444330549303, guid: 16a37212167c1ed4393102c8b67332af, type: 3}
   foodSpawnRange: 30
   foodPickupRange: 0.5
-  foodSpawnRate: 4
+  foodSpawnRate: 3.5
   generateBoids: 1
-  generateHunter: 1
+  generateHunter: 0
   patrolPoints:
   - {fileID: 738269793}
   - {fileID: 1039367021}
   - {fileID: 2029010063}
+  AmountKilled: 0
+  AmountBorn: 0
 --- !u!4 &832442606
 Transform:
   m_ObjectHideFlags: 0

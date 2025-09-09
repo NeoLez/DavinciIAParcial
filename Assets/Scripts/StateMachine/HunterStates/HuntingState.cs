@@ -51,6 +51,7 @@ namespace Hunter {
             float distanceToTargetBoid = Vector2.Distance(_hunter.transform.position, targetedBoid.transform.position);
             if (distanceToTargetBoid < _eatDistance) {
                 Manager.Instance.DeleteBoid(targetedBoid);
+                Manager.Instance.AmountKilled++;
             }
             _hunter.Pursue(targetedBoid.transform.position, targetedBoid.velocity, distanceToTargetBoid/_hunter.maxSpeed);
             _hunter.SpendEnergy(deltaTime);

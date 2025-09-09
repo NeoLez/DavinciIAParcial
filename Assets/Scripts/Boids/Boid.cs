@@ -27,6 +27,8 @@ namespace Boids
                 if (Vector2.Distance(food.position, transform.position) <= food.radius) {
                     Manager.Instance.foodItems.Remove(food);
                     Destroy(food.gameObject);
+                    Reproduce();
+                    Manager.Instance.AmountBorn++;
                 }
                 else {
                     velocity += Arrive(food.position, food.radius);
@@ -45,6 +47,12 @@ namespace Boids
             ProcessMovement();
         }
 
+        private void Reproduce() {
+            GameObject newBoid = Instantiate(gameObject);
+            newBoid.transform.position += (Vector3)Random.insideUnitCircle * 0.01f;
+            Manager.Instance.boids.Add(newBoid.GetComponent<Boid>());
+        }
+        
         private bool IsFoodNearby(out Target food) {
             Target closestFood = null;
             float closestDistance = Single.MaxValue;

@@ -46,15 +46,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: {x: 0, y: 0}
-  maxSpeed: 12
-  maxTurnSpeed: 0.5
+  maxSpeed: 13
+  maxTurnSpeed: 0.3
   patrolPositions: []
   timeToRecovery: 4
   minimumPatrolPointDistance: 0.1
-  viewDistance: 12
-  stopSlowdownSpeed: 10
-  boidEatDistance: 0.5
-  maxEnergy: 3
+  viewDistance: 10
+  stopSlowdownSpeed: 4
+  boidEatDistance: 0.65
+  maxEnergy: 5
 --- !u!1 &8857841278618341031
 GameObject:
   m_ObjectHideFlags: 0

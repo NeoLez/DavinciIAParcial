@@ -33,8 +33,12 @@ namespace Boids {
         [SerializeField] private bool generateBoids;
         [SerializeField] private bool generateHunter;
         [SerializeField] private List<Target> patrolPoints;
+
+        public int AmountKilled;
+        public int AmountBorn;
         
         private void Update() {
+            Debug.Log($"Killed: {AmountKilled} Born: {AmountBorn}");
             if (generateBoids) {
                 generateBoids = false;
                 GenerateBoids();
@@ -73,6 +77,11 @@ namespace Boids {
         public void DeleteBoid(Boid boid) {
             boidsToDelete.Add(boid);
         }
+        
+        private List<Target> foodsToDelete = new();
+        public void DeleteFood(Target food) {
+            foodsToDelete.Add(food);
+        }
 
         private void LateUpdate() {
             foreach (var boidToDelete in boidsToDelete) {
@@ -80,6 +89,12 @@ namespace Boids {
                 Destroy(boidToDelete.gameObject);
             }
             boidsToDelete.Clear();
+            
+            foreach (var foodToDelete in foodsToDelete) {
+                foodItems.Remove(foodToDelete);
+                Destroy(foodToDelete.gameObject);
+            }
+            foodsToDelete.Clear();
         }
 
         public void GenerateHunter() {
