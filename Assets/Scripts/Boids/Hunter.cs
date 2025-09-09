@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Hunter;
+using Boids.HunterBehaviours;
 using StateMachine;
 using UnityEngine;
 

@@ -1,9 +1,8 @@
 ﻿using System;
-using Boids;
 using StateMachine;
 using UnityEngine;
 
-namespace Hunter {
+namespace Boids.HunterBehaviours {
     public class HuntingState : IState<HunterStates> {
         private StateMachine<HunterStates> _stateMachine;
         private Boids.Hunter _hunter;
@@ -25,7 +24,7 @@ namespace Hunter {
         }
 
         public void OnUpdate(float deltaTime) {
-            var boids = Manager.Instance.boids;
+            var boids = Manager.instance.Boids;
             
             float minimumDistance = Single.MaxValue;
             Boid targetedBoid = null;
@@ -50,8 +49,8 @@ namespace Hunter {
             
             float distanceToTargetBoid = Vector2.Distance(_hunter.transform.position, targetedBoid.transform.position);
             if (distanceToTargetBoid < _eatDistance) {
-                Manager.Instance.DeleteBoid(targetedBoid);
-                Manager.Instance.AmountKilled++;
+                Manager.instance.DeleteBoid(targetedBoid);
+                Manager.instance.amountKilled++;
             }
             _hunter.Pursue(targetedBoid.transform.position, targetedBoid.velocity, distanceToTargetBoid/_hunter.maxSpeed);
             _hunter.SpendEnergy(deltaTime);

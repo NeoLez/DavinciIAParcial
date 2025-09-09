@@ -1,8 +1,8 @@
 ﻿using DefaultNamespace.Utils;
-using Hunter;
+using StateMachine;
 using UnityEngine;
 
-namespace StateMachine {
+namespace Boids.HunterBehaviours {
     public class RestState : IState<HunterStates> {
         private StateMachine<HunterStates> _stateMachine;
         private Boids.Hunter _hunter;

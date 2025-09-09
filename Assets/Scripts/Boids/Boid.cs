@@ -5,7 +5,6 @@ using Random = UnityEngine.Random;
 namespace Boids
 {
     public class Boid : MovementAgent {
-        [SerializeField] private Transform seekPos;
         [SerializeField] private float foodDetectionRange;
         [SerializeField] private float hunterDetectionRange;
         [SerializeField] private float alignmentRadius;
@@ -25,10 +24,10 @@ namespace Boids
         private void Update() {
             if (IsFoodNearby(out Target food)) {
                 if (Vector2.Distance(food.position, transform.position) <= food.radius) {
-                    Manager.Instance.foodItems.Remove(food);
+                    Manager.instance.FoodItems.Remove(food);
                     Destroy(food.gameObject);
                     Reproduce();
-                    Manager.Instance.AmountBorn++;
+                    Manager.instance.amountBorn++;
                 }
                 else {
                     velocity += Arrive(food.position, food.radius);
@@ -50,13 +49,13 @@ namespace Boids
         private void Reproduce() {
             GameObject newBoid = Instantiate(gameObject);
             newBoid.transform.position += (Vector3)Random.insideUnitCircle * 0.01f;
-            Manager.Instance.boids.Add(newBoid.GetComponent<Boid>());
+            Manager.instance.Boids.Add(newBoid.GetComponent<Boid>());
         }
         
         private bool IsFoodNearby(out Target food) {
             Target closestFood = null;
             float closestDistance = Single.MaxValue;
-            foreach (var foodItem in Manager.Instance.foodItems) {
+            foreach (var foodItem in Manager.instance.FoodItems) {
                 float distance = Vector2.Distance(transform.position, foodItem.position);
                 if (distance <= closestDistance) {
                     closestFood = foodItem;
@@ -77,7 +76,7 @@ namespace Boids
             float closestDistance = Single.MaxValue;
             Hunter newHunter = null;
             
-            foreach (var h in Manager.Instance.hunters) {
+            foreach (var h in Manager.instance.Hunters) {
                 float distance = Vector2.Distance(transform.position, h.transform.position);
                 if (distance < closestDistance) {
                     newHunter = h;
@@ -97,7 +96,7 @@ namespace Boids
         }
 
         private bool AreBoidsNearby() {
-            foreach (var boid in Manager.Instance.boids) {
+            foreach (var boid in Manager.instance.Boids) {
                 if (boid == this) continue;
                 if (Vector2.Distance(boid.transform.position, transform.position) < Math.Max(alignmentRadius, cohesionRadius)) {
                     return true;
@@ -117,7 +116,7 @@ namespace Boids
             int alignmentCount = 0, separationCount = 0, cohesionCount = 0;
             Vector2 alignmentSum = Vector2.zero, separationSum = Vector2.zero, cohesionSum = Vector2.zero;
 
-            foreach (var boid in Manager.Instance.boids) {
+            foreach (var boid in Manager.instance.Boids) {
                 if (boid == this) continue;
                 
                 Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Boids;
-using Hunter;
+using StateMachine;
 using UnityEngine;
 
-namespace StateMachine {
+namespace Boids.HunterBehaviours {
     public class PatrolState : IState<HunterStates> {
         private StateMachine<HunterStates> _stateMachine;
         private Boids.Hunter _hunter;
@@ -44,7 +43,7 @@ namespace StateMachine {
         }
 
         private void HandleBoidSight() {
-            foreach (var boid in Manager.Instance.boids) {
+            foreach (var boid in Manager.instance.Boids) {
                 float distance = Vector2.Distance(_hunter.transform.position, boid.transform.position);
                 if (distance <= _viewRange) {
                     _stateMachine.ChangeState(HunterStates.Hunting);

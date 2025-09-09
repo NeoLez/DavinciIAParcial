@@ -1,44 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DefaultNamespace.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Boids {
     public class Manager : MonoBehaviour {
-        public static Manager Instance { get; private set; }
-        private void Awake() {
-            Instance = this;
-            foodTimer = new Timer(foodSpawnRate);
-        }
-
-        public readonly List<Boid> boids = new();
-        public readonly List<Target> foodItems = new();
-        public readonly List<Hunter> hunters = new();
-
+        public static Manager instance { get; private set; }
+        
+        [Header("Boids")]
         [SerializeField] private GameObject boidPrefab;
         [SerializeField] private float spawnRange;
-        [SerializeField] private float maxSpeed;
-        [SerializeField] private float maxTurnSpeed;
         [SerializeField] private int number;
+        [SerializeField] private bool generateBoids;
         
+        [Header("Hunter")]
         [SerializeField] private GameObject hunterPrefab;
+        [SerializeField] private List<Target> patrolPoints;
+        [SerializeField] private bool generateHunter;
 
+        [Header("Food")]
         [SerializeField] private GameObject foodPrefab;
         [SerializeField] private float foodSpawnRange;
         [SerializeField] private float foodPickupRange;
         [SerializeField] private float foodSpawnRate;
-        private Timer foodTimer;
         
-        [SerializeField] private bool generateBoids;
-        [SerializeField] private bool generateHunter;
-        [SerializeField] private List<Target> patrolPoints;
+        private void Awake() {
+            instance = this;
+            _foodTimer = new Timer(foodSpawnRate);
+        }
 
-        public int AmountKilled;
-        public int AmountBorn;
+        public readonly List<Boid> Boids = new();
+        public readonly List<Target> FoodItems = new();
+        public readonly List<Hunter> Hunters = new();
+        
+        private Timer _foodTimer;
+        
+        public int amountKilled;
+        public int amountBorn;
         
         private void Update() {
-            Debug.Log($"Killed: {AmountKilled} Born: {AmountBorn}");
+            Debug.Log($"Killed: {amountKilled} Born: {amountBorn}");
             if (generateBoids) {
                 generateBoids = false;
                 GenerateBoids();
@@ -48,8 +49,8 @@ namespace Boids {
                 GenerateHunter();
             }
 
-            if (foodTimer.hasFinished()) {
-                foodTimer.AddTime(foodSpawnRate);
+            if (_foodTimer.hasFinished()) {
+                _foodTimer.AddTime(foodSpawnRate);
                 SpawnFood();
             }
         }
@@ -59,48 +60,46 @@ namespace Boids {
             Target target = food.GetComponent<Target>();
             target.radius = foodPickupRange;
             target.position = food.transform.position;
-            foodItems.Add(target);
+            FoodItems.Add(target);
         }
 
-        public void GenerateBoids() {
+        private void GenerateBoids() {
             for (int i = 0; i < number; i++) {
                 GameObject boid = Instantiate(boidPrefab, Random.insideUnitCircle * spawnRange, Quaternion.identity);
                 Boid boidComponent = boid.GetComponent<Boid>();
-                boidComponent.maxSpeed = maxSpeed;
-                boidComponent.maxTurnSpeed = maxTurnSpeed;
                 boidComponent.velocity = Random.insideUnitSphere;
-                boids.Add(boidComponent);
+                Boids.Add(boidComponent);
             }
         }
 
-        private List<Boid> boidsToDelete = new();
+        private readonly List<Boid> _boidsToDelete = new();
         public void DeleteBoid(Boid boid) {
-            boidsToDelete.Add(boid);
+            _boidsToDelete.Add(boid);
         }
         
-        private List<Target> foodsToDelete = new();
+        private readonly List<Target> _foodsToDelete = new();
         public void DeleteFood(Target food) {
-            foodsToDelete.Add(food);
+            _foodsToDelete.Add(food);
         }
 
         private void LateUpdate() {
-            foreach (var boidToDelete in boidsToDelete) {
-                boids.Remove(boidToDelete);
+            foreach (var boidToDelete in _boidsToDelete) {
+                Boids.Remove(boidToDelete);
                 Destroy(boidToDelete.gameObject);
             }
-            boidsToDelete.Clear();
+            _boidsToDelete.Clear();
             
-            foreach (var foodToDelete in foodsToDelete) {
-                foodItems.Remove(foodToDelete);
+            foreach (var foodToDelete in _foodsToDelete) {
+                FoodItems.Remove(foodToDelete);
                 Destroy(foodToDelete.gameObject);
             }
-            foodsToDelete.Clear();
+            _foodsToDelete.Clear();
         }
 
-        public void GenerateHunter() {
+        private void GenerateHunter() {
             GameObject hunter = Instantiate(hunterPrefab);
             hunter.GetComponent<Hunter>().SetPatrolPositions(new List<Target>(patrolPoints));
-            hunters.Add(hunter.GetComponent<Hunter>());
+            Hunters.Add(hunter.GetComponent<Hunter>());
         }
     }
 }

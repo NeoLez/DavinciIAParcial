@@ -1,4 +1,4 @@
-﻿namespace Hunter {
+﻿namespace Boids.HunterBehaviours {
     public enum HunterStates {
         Rest,
         Patrol,
