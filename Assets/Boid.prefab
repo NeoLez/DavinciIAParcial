@@ -52,15 +52,16 @@ MonoBehaviour:
   behaviours: []
   foodDetectionRange: 10
   hunterDetectionRange: 7
-  alignmentRadius: 3
-  separationRadius: 1
-  cohesionRadius: 4
+  alignmentRadius: 4
+  separationRadius: 1.5
+  cohesionRadius: 6
   alignmentStrength: 0.626
   separationStrength: 0.796
   cohesionStrength: 0.415
   randomStrength: 0.1
   circleBoundRadius: 35
   circleBoundStrength: 1.1
+  fov: 100
   log: 0
   references:
     version: 2

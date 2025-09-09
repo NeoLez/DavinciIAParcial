@@ -248,7 +248,7 @@ MonoBehaviour:
   spawnRange: 5
   maxSpeed: 12
   maxTurnSpeed: 0.3
-  number: 200
+  number: 150
   hunterPrefab: {fileID: 5321120444330549303, guid: 884f044be00a7714e88abae5c6ca61f5, type: 3}
   foodPrefab: {fileID: 5321120444330549303, guid: 16a37212167c1ed4393102c8b67332af, type: 3}
   foodSpawnRange: 30

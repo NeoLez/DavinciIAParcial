@@ -21,6 +21,8 @@ namespace Boids
         [SerializeField] private float circleBoundRadius;
         [SerializeField] private float circleBoundStrength;
 
+        [SerializeField] private float fov;
+        
         public bool log;
         private void Update() {
             if (IsFoodNearby(out Target food)) {
@@ -122,16 +124,21 @@ namespace Boids
                     separationSum += away * weight;
                 }
                 else {
-                    if (distance <= cohesionRadius) {
-                        cohesionCount++;
-                        cohesionSum += (Vector2)boid.transform.position;
+                    if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= fov) {
+                        if (distance <= cohesionRadius) {
+                            cohesionCount++;
+                            cohesionSum += (Vector2)boid.transform.position;
+                        } 
                     }
+                    
+                }
+                if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= fov) {
+                    if (distance <= alignmentRadius) {
+                        alignmentCount++;
+                        alignmentSum += boid.velocity;
+                    }  
                 }
                 
-                if (distance <= alignmentRadius) {
-                    alignmentCount++;
-                    alignmentSum += boid.velocity;
-                }
             }
 
             Vector2 separationSteering = Vector2.zero;
