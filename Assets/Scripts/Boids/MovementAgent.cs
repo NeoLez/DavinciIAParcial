@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace Boids {
     public class MovementAgent : MonoBehaviour {
-        public Vector2 velocity; //CHANGING THIS TO A PROPERTY MAKES EVERYTHING EXPLODE :3
+        protected Vector2 velocity; //CHANGING THIS TO A PROPERTY MAKES EVERYTHING EXPLODE :3
+        public Vector2 GetVelocity() => velocity;
         [SerializeField] protected float maxSpeed;
         [SerializeField] protected float maxTurnSpeed;
         

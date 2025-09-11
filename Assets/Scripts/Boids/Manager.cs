@@ -71,6 +71,12 @@ namespace Boids {
                 Boids.Add(boidComponent);
             }
         }
+        
+        private void GenerateHunter() {
+            GameObject hunter = Instantiate(hunterPrefab);
+            hunter.GetComponent<Hunter>().SetPatrolPositions(new List<Target>(patrolPoints));
+            Hunters.Add(hunter.GetComponent<Hunter>());
+        }
 
         private readonly List<Boid> _boidsToDelete = new();
         public void DeleteBoid(Boid boid) {
@@ -94,12 +100,6 @@ namespace Boids {
                 Destroy(foodToDelete.gameObject);
             }
             _foodsToDelete.Clear();
-        }
-
-        private void GenerateHunter() {
-            GameObject hunter = Instantiate(hunterPrefab);
-            hunter.GetComponent<Hunter>().SetPatrolPositions(new List<Target>(patrolPoints));
-            Hunters.Add(hunter.GetComponent<Hunter>());
         }
     }
 }

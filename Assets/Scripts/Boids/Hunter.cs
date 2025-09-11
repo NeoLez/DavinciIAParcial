@@ -12,8 +12,9 @@ namespace Boids {
         [SerializeField] private float viewDistance;
         [SerializeField] private float stopSlowdownSpeed;
         [SerializeField] private float boidEatDistance;
-        public float energy { get; private set; }
         [SerializeField] private float maxEnergy;
+        public float energy { get; private set; }
+        
 
         private void Start() {
             _stateMachine = new();

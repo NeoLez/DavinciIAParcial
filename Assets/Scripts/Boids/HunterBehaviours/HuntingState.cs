@@ -36,7 +36,7 @@ namespace Boids.HunterBehaviours {
                 return;
             }
             
-            _hunter.AddVelocity(_hunter.Pursue(targetedBoid.transform.position, targetedBoid.velocity, minimumDistance/_hunter.GetMaxSpeed()));
+            _hunter.AddVelocity(_hunter.Pursue(targetedBoid.transform.position, targetedBoid.GetVelocity(), minimumDistance/_hunter.GetMaxSpeed()));
             if (minimumDistance < _eatDistance) {
                 Manager.instance.DeleteBoid(targetedBoid);
                 Manager.instance.amountKilled++;
