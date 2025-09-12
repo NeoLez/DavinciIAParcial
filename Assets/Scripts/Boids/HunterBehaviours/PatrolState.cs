@@ -25,7 +25,7 @@ namespace Boids.HunterBehaviours {
             float minDistance = Single.MaxValue;
             for (int i = 0; i < _patrolPositions.Count; i++) {
                 Target patrolPosition = _patrolPositions[i];
-                float distance = Vector2.Distance(_hunter.transform.position, patrolPosition.position);
+                float distance = Vector2.Distance(_hunter.transform.position, patrolPosition.transform.position);
                 if (distance < minDistance) {
                     _currentTargetIndex = i;
                     minDistance = distance;
@@ -37,29 +37,39 @@ namespace Boids.HunterBehaviours {
         }
 
         public void OnUpdate(float deltaTime) {
+            if (HandleBoidSight()) return;
+            
             HandlePatrol();
             _hunter.AddEnergy(deltaTime);
-            HandleBoidSight();
         }
 
-        private void HandleBoidSight() {
+        /// <summary>
+        /// If there is a <c>Boid</c> in sight, switch the state to Hunting.
+        /// </summary>
+        /// <returns>True if a <c>boid</c> was found. Otherwise, returns false.</returns>
+        private bool HandleBoidSight() {
             foreach (var boid in Manager.instance.Boids) {
                 float distance = Vector2.Distance(_hunter.transform.position, boid.transform.position);
                 if (distance <= _viewRange) {
                     _stateMachine.ChangeState(HunterStates.Hunting);
-                    return;
+                    return true;
                 }
             }
+
+            return false;
         }
 
+        /// <summary>
+        /// Handles patrolling movement and switching of targets if a patrol point is reached.
+        /// </summary>
         private void HandlePatrol() {
-            float distance = Vector2.Distance(_patrolPositions[_currentTargetIndex].position, _hunter.transform.position);
+            float distance = Vector2.Distance(_patrolPositions[_currentTargetIndex].transform.position, _hunter.transform.position);
             if (distance <= _targetMinimumDistance) {
                 _currentTargetIndex = (_currentTargetIndex + 1) % _patrolPositions.Count;
             }
 
             Target target = _patrolPositions[_currentTargetIndex];
-            _hunter.AddVelocity(_hunter.Arrive(target.position, target.radius));
+            _hunter.AddVelocity(_hunter.Arrive(target.transform.position, target.radius));
         }
     }
 }

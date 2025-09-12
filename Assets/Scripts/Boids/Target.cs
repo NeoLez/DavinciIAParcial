@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 
 namespace Boids {
+    /// <summary>
+    /// Marks a <c>MonoBehaviour</c> as a target and determines its collision radius.
+    /// </summary>
     public class Target : MonoBehaviour {
-        public Vector2 position;
         public float radius;
-
-        private void Update() {
-            position = transform.position;
-        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using StateMachine;
+﻿using StateMachine;
 using UnityEngine;
 
 namespace Boids.HunterBehaviours {
@@ -36,14 +35,18 @@ namespace Boids.HunterBehaviours {
                 return;
             }
             
-            _hunter.AddVelocity(_hunter.Pursue(targetedBoid.transform.position, targetedBoid.GetVelocity(), minimumDistance/_hunter.GetMaxSpeed()));
             if (minimumDistance < _eatDistance) {
                 Manager.instance.DeleteBoid(targetedBoid);
                 Manager.instance.amountKilled++;
+                return;
             }
+            
+            _hunter.AddVelocity(_hunter.Pursue(targetedBoid.transform.position, targetedBoid.GetVelocity(), minimumDistance/_hunter.GetMaxSpeed()));
             _hunter.AddEnergy(-deltaTime);
         }
-
+        
+        /// <param name="minimumDistance"><c>Boid</c>s that are further from the hunter than this are ignored. The value is altered to match the distance from the hunter to the closest <c>boid</c> if found.</param>
+        /// <returns>Returns the closest <c>boid</c> to the hunter which is also closer than minimumDistance. If not found, returns null</returns>
         private Boid FindClosestBoid(ref float minimumDistance) {
             Boid targetedBoid = null;
             foreach (var boid in Manager.instance.Boids) {

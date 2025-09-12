@@ -8,10 +8,18 @@ namespace Boids {
         public Vector2 GetVelocity() => velocity;
 
         [NonSerialized] private MovementAgentSO _settings;
+        
+        /// <summary>
+        /// Initializes the <c>MovementAgent</c> to use the settings ScriptableObject provided as a parameter.
+        /// </summary>
+        /// <param name="settings">Settings ScriptableObject reference</param>
         protected void Initialize(MovementAgentSO settings) {
             _settings = settings;
         }
-
+        
+        /// <summary>
+        /// Processes the movement of the agent and keeps it's rotation aligned with it's velocity.
+        /// </summary>
         protected void ProcessMovement() {
             if (velocity.magnitude > _settings.maxSpeed) {
                 velocity.Normalize();
@@ -70,10 +78,6 @@ namespace Boids {
 
         public float GetMaxSpeed() {
             return _settings.maxSpeed;
-        }
-
-        public float GetMaxTurnSpeed() {
-            return _settings.maxTurnSpeed;
         }
     }
 }

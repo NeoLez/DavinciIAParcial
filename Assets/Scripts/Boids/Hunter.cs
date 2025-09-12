@@ -15,8 +15,8 @@ namespace Boids {
             base.Initialize(settings);
             _settings = settings;
         }
-        
-        public float energy { get; private set; }
+
+        private float _energy;
         
 
         private void Start() {
@@ -25,7 +25,7 @@ namespace Boids {
             _stateMachine.AddState(HunterStates.Patrol, new PatrolState(_stateMachine, this, _patrolPositions, _settings.minimumPatrolPointDistance, _settings.viewDistance));
             _stateMachine.AddState(HunterStates.Hunting, new HuntingState(_stateMachine, this, _settings.viewDistance, _settings.boidEatDistance));
             _stateMachine.ChangeState(HunterStates.Patrol);
-            energy = _settings.maxEnergy;
+            _energy = _settings.maxEnergy;
         }
 
         private void Update() {
@@ -33,25 +33,35 @@ namespace Boids {
             
             ProcessMovement();
         }
-
-        public void StopMoving() {
-            velocity *= 1 - (_settings.stopSlowdownSpeed * Time.deltaTime);
+        
+        public void SlowDown() {
+            velocity *= 1 - _settings.stopSlowdownSpeed * Time.deltaTime;
         }
 
+        /// <summary>
+        /// Restores current energy to the maximum amount.
+        /// </summary>
         public void RestoreEnergy() {
-            energy = _settings.maxEnergy;
+            _energy = _settings.maxEnergy;
         }
 
         public void AddEnergy(float energyToAdd) {
-            energy += energyToAdd;
-            if (energy > _settings.maxEnergy)
-                energy = _settings.maxEnergy;
+            _energy += energyToAdd;
+            if (_energy > _settings.maxEnergy)
+                _energy = _settings.maxEnergy;
         }
 
         public bool HasEnergy() {
-            return energy > 0;
+            return _energy > 0;
         }
 
+        /// <summary>
+        /// Sets the list of positions the <c>Hunter</c> will use to patrol.
+        /// <para>The list is saved as a reference. If it's changed externally, the behaviour of the <c>Hunter</c> will change accordingly.
+        /// Create a copy if that's not what you want.
+        /// </para>
+        /// </summary>
+        /// <param name="positions">List of positions to be used for the <c>Hunter</c> to patrol.</param>
         public void SetPatrolPositions(List<Target> positions) {
             _patrolPositions = positions;
         }

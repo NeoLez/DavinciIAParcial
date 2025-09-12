@@ -25,7 +25,7 @@ namespace Boids.HunterBehaviours {
         }
 
         public void OnUpdate(float _) {
-            _hunter.StopMoving();
+            _hunter.SlowDown();
             if (_recoveryTimer.HasFinished()) {
                 _hunter.RestoreEnergy();
                 _stateMachine.ChangeState(HunterStates.Patrol);

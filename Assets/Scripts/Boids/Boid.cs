@@ -8,18 +8,24 @@ namespace Boids
     public class Boid : MovementAgent {
         [NonSerialized] private BoidSO _settings;
 
+        /// <summary>
+        /// Initializes the <c>Boid</c> to use the settings ScriptableObject provided as a parameter.
+        /// Also sets the settings for the <c>MovementAgent</c> superclass.
+        /// </summary>
+        /// <param name="settings">Settings ScriptableObject reference</param>
         public void Initialize(BoidSO settings) {
             base.Initialize(settings);
             _settings = settings;
         }
 
         private void Update() {
-            if (IsFoodNearby(out Target food)) {
-                if (Vector2.Distance(food.position, transform.position) <= food.radius) {
+            float foodDistance = _settings.foodDetectionRange;
+            if (IsFoodNearby(out Target food, ref foodDistance)) {
+                if (foodDistance <= food.radius) {
                     ConsumeFood(food);
                 }
                 else {
-                    AddVelocity(Arrive(food.position, food.radius));
+                    AddVelocity(Arrive(food.transform.position, food.radius));
                 }
             } else if (IsHunterNearby(out Hunter hunter)) {
                 AddVelocity(Flee(hunter.transform.position));
@@ -45,34 +51,39 @@ namespace Boids
             Manager.instance.amountBorn++;
         }
         
+        /// <summary>
+        /// Creates a clone of the <c>Boid</c>
+        /// </summary>
         private void Reproduce() {
             GameObject newBoid = Instantiate(gameObject);
             newBoid.transform.position += (Vector3)Random.insideUnitCircle * 0.01f;
             Boid boidComponent = newBoid.GetComponent<Boid>();
             boidComponent.Initialize(_settings);
+            boidComponent.SetInitialVelocity(velocity);
             Manager.instance.Boids.Add(boidComponent);
         }
         
-        private bool IsFoodNearby(out Target food) {
-            Target closestFood = null;
-            float closestDistance = Single.MaxValue;
+        /// <param name="food">Returns the closest food item to the <c>Boid</c> which is also closer than minimumDistance. If not found, returns null</param>
+        /// <param name="minimumDistance">Food items that are further from the <c>Boid</c> than this are ignored. The value is altered to match the distance from the <c>Boid</c> to the closest food item if found.</param>
+        /// <returns>True if food was found. Otherwise, false.</returns>
+        private bool IsFoodNearby(out Target food, ref float minimumDistance) {
+            food = null;
             foreach (var foodItem in Manager.instance.FoodItems) {
-                float distance = Vector2.Distance(transform.position, foodItem.position);
-                if (distance <= closestDistance) {
-                    closestFood = foodItem;
-                    closestDistance = distance;
+                float dist = Vector2.Distance(transform.position, foodItem.transform.position);
+                if (dist <= minimumDistance) {
+                    food = foodItem;
+                    minimumDistance = dist;
                 }
             }
 
-            if (closestFood != null && closestDistance <= _settings.foodDetectionRange) {
-                food = closestFood;
-                return true;
-            }
+            if (food == null)
+                return false;
 
-            food = null;
-            return false;
+            return true;
         }
-
+        
+        /// <param name="hunter">Returns the hunter's <c>Target</c> or null if none is found.</param>
+        /// <returns>True if there is a <c>Hunter</c> within view range.</returns>
         private bool IsHunterNearby(out Hunter hunter) {
             float closestDistance = Single.MaxValue;
             Hunter newHunter = null;
@@ -95,7 +106,8 @@ namespace Boids
             hunter = null;
             return false;
         }
-
+        
+        /// <returns>True if <c>Boid</c>s are found within the alignment radius or cohesion radius, whichever is biggest.</returns>
         private bool AreBoidsNearby() {
             foreach (var boid in Manager.instance.Boids) {
                 if (boid == this) continue;
@@ -107,6 +119,7 @@ namespace Boids
             return false;
         }
 
+        /// <returns>A Seek vector toward the center of the map.</returns>
         public Vector2 AvoidEscapingBounds() {
             if (transform.position.magnitude > _settings.circleBoundRadius) {
                 return Seek(Vector2.zero) * _settings.circleBoundStrength;
@@ -179,6 +192,10 @@ namespace Boids
             return separationSteering;
         }
         
+        /// <summary>
+        /// Calculates the flocking movement vector as the sum of the Separation, Alignment and Cohesion rules.
+        /// </summary>
+        /// <returns>Flocking movement vector.</returns>
         private Vector2 Flocking() {
             Vector2 randomSteer = _settings.randomStrength * Random.insideUnitCircle;
             return Separation() + Alignment() + Cohesion() + randomSteer;
@@ -189,6 +206,7 @@ namespace Boids
             _randomVector = Random.insideUnitCircle;
         }
         
+        /// <returns>A pseudorandom movement vector.</returns>
         private Vector2 RandomMovement() {
             if (Vector2.Angle(velocity, _randomVector) < 10 && velocity.magnitude > _settings.maxSpeed*0.95) {
                 _randomVector = Random.insideUnitCircle;
@@ -197,10 +215,17 @@ namespace Boids
             return Seek((Vector2)transform.position + _randomVector) * 0.15f;
         }
 
+        /// <summary>
+        /// Set's the velocity of the entity. Meant to be used only when first creating it.
+        /// </summary>
         public void SetInitialVelocity(Vector2 initialVelocity) {
             velocity = initialVelocity;
         }
 
+        /// <summary>
+        /// Calculates the flocking movement vector as the sum of the Separation, Alignment and Cohesion rules in a more computationally efficient way.
+        /// </summary>
+        /// <returns>Flocking movement vector.</returns>
         private Vector2 FlockingHighPerformance() {
             int alignmentCount = 0, separationCount = 0, cohesionCount = 0;
             Vector2 alignmentSum = Vector2.zero, separationSum = Vector2.zero, cohesionSum = Vector2.zero;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Boids.SO;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Utils;
 using Random = UnityEngine.Random;
 
@@ -11,14 +12,14 @@ namespace Boids {
         [Header("Boids")]
         [SerializeField] private GameObject boidPrefab;
         [SerializeField] private BoidSO boidSettings;
-        [SerializeField] private float spawnRange;
-        [SerializeField] private int number;
+        [SerializeField] private float boidSpawnRange;
+        [SerializeField] private int numberOfBoids;
         [SerializeField] private bool generateBoids;
         
         [Header("Hunter")]
         [SerializeField] private GameObject hunterPrefab;
         [SerializeField] private HunterSO hunterSettings;
-        [SerializeField] private List<Target> patrolPoints;
+        [SerializeField] private List<Target> hunterPatrolPoints;
         [SerializeField] private bool generateHunter;
 
         [Header("Food")]
@@ -62,13 +63,13 @@ namespace Boids {
             GameObject food = Instantiate(foodPrefab, Random.insideUnitCircle * foodSpawnRange, Quaternion.identity);
             Target target = food.GetComponent<Target>();
             target.radius = foodPickupRange;
-            target.position = food.transform.position;
+            //target.position = food.transform.position;
             FoodItems.Add(target);
         }
 
         private void GenerateBoids() {
-            for (int i = 0; i < number; i++) {
-                GameObject boid = Instantiate(boidPrefab, Random.insideUnitCircle * spawnRange, Quaternion.identity);
+            for (int i = 0; i < numberOfBoids; i++) {
+                GameObject boid = Instantiate(boidPrefab, Random.insideUnitCircle * boidSpawnRange, Quaternion.identity);
                 Boid boidComponent = boid.GetComponent<Boid>();
                 boidComponent.Initialize(boidSettings);
                 boidComponent.SetInitialVelocity(Random.insideUnitCircle);
@@ -80,7 +81,7 @@ namespace Boids {
             GameObject hunter = Instantiate(hunterPrefab);
             Hunter hunterComponent = hunter.GetComponent<Hunter>();
             hunterComponent.Initialize(hunterSettings);
-            hunterComponent.SetPatrolPositions(new List<Target>(patrolPoints));
+            hunterComponent.SetPatrolPositions(new List<Target>(hunterPatrolPoints));
             Hunters.Add(hunter.GetComponent<Hunter>());
         }
 
