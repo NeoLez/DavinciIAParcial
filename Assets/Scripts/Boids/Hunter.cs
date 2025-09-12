@@ -1,28 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Boids.HunterBehaviours;
+using Boids.SO;
 using StateMachine;
 using UnityEngine;
 
 namespace Boids {
     public class Hunter : MovementAgent {
         private StateMachine<HunterStates> _stateMachine;
-        [SerializeField] private List<Target> patrolPositions;
-        [SerializeField] private float timeToRecovery;
-        [SerializeField] private float minimumPatrolPointDistance;
-        [SerializeField] private float viewDistance;
-        [SerializeField] private float stopSlowdownSpeed;
-        [SerializeField] private float boidEatDistance;
-        [SerializeField] private float maxEnergy;
+        private List<Target> _patrolPositions;
+        [NonSerialized] private HunterSO _settings;
+        
+        public void Initialize(HunterSO settings) {
+            base.Initialize(settings);
+            _settings = settings;
+        }
+        
         public float energy { get; private set; }
         
 
         private void Start() {
             _stateMachine = new();
-            _stateMachine.AddState(HunterStates.Rest, new RestState(_stateMachine, this, timeToRecovery));
-            _stateMachine.AddState(HunterStates.Patrol, new PatrolState(_stateMachine, this, patrolPositions, minimumPatrolPointDistance, viewDistance));
-            _stateMachine.AddState(HunterStates.Hunting, new HuntingState(_stateMachine, this, viewDistance, boidEatDistance));
+            _stateMachine.AddState(HunterStates.Rest, new RestState(_stateMachine, this, _settings.timeToRecovery));
+            _stateMachine.AddState(HunterStates.Patrol, new PatrolState(_stateMachine, this, _patrolPositions, _settings.minimumPatrolPointDistance, _settings.viewDistance));
+            _stateMachine.AddState(HunterStates.Hunting, new HuntingState(_stateMachine, this, _settings.viewDistance, _settings.boidEatDistance));
             _stateMachine.ChangeState(HunterStates.Patrol);
-            energy = maxEnergy;
+            energy = _settings.maxEnergy;
         }
 
         private void Update() {
@@ -32,17 +35,17 @@ namespace Boids {
         }
 
         public void StopMoving() {
-            velocity *= 1 - (stopSlowdownSpeed * Time.deltaTime);
+            velocity *= 1 - (_settings.stopSlowdownSpeed * Time.deltaTime);
         }
 
         public void RestoreEnergy() {
-            energy = maxEnergy;
+            energy = _settings.maxEnergy;
         }
 
         public void AddEnergy(float energyToAdd) {
             energy += energyToAdd;
-            if (energy > maxEnergy)
-                energy = maxEnergy;
+            if (energy > _settings.maxEnergy)
+                energy = _settings.maxEnergy;
         }
 
         public bool HasEnergy() {
@@ -50,7 +53,7 @@ namespace Boids {
         }
 
         public void SetPatrolPositions(List<Target> positions) {
-            patrolPositions = positions;
+            _patrolPositions = positions;
         }
     }
 }

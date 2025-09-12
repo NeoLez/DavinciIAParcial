@@ -291,10 +291,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boidPrefab: {fileID: 5321120444330549303, guid: 68058882cd8e1d34f9f1823d29ef8638, type: 3}
+  boidSettings: {fileID: 11400000, guid: 69af2b245a44ab147b66860c791bdffa, type: 2}
   spawnRange: 5
   number: 100
   generateBoids: 1
   hunterPrefab: {fileID: 5321120444330549303, guid: 884f044be00a7714e88abae5c6ca61f5, type: 3}
+  hunterSettings: {fileID: 11400000, guid: b2cc6f7d282025b4c903325780cf464d, type: 2}
   patrolPoints:
   - {fileID: 738269793}
   - {fileID: 1039367021}

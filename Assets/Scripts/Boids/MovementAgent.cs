@@ -1,17 +1,21 @@
 ﻿using System;
+using Boids.SO;
 using UnityEngine;
 
 namespace Boids {
     public class MovementAgent : MonoBehaviour {
         protected Vector2 velocity; //CHANGING THIS TO A PROPERTY MAKES EVERYTHING EXPLODE :3
         public Vector2 GetVelocity() => velocity;
-        [SerializeField] protected float maxSpeed;
-        [SerializeField] protected float maxTurnSpeed;
-        
+
+        [NonSerialized] private MovementAgentSO _settings;
+        protected void Initialize(MovementAgentSO settings) {
+            _settings = settings;
+        }
+
         protected void ProcessMovement() {
-            if (velocity.magnitude > maxSpeed) {
+            if (velocity.magnitude > _settings.maxSpeed) {
                 velocity.Normalize();
-                velocity *= maxSpeed;
+                velocity *= _settings.maxSpeed;
             }
             
             transform.rotation = Quaternion.Euler(0, 0, (float)(Math.Atan2(velocity.y, velocity.x) / Math.PI * 180));
@@ -22,12 +26,12 @@ namespace Boids {
         public Vector2 Seek(Vector2 target) {
             Vector2 desiredVelocity = target - (Vector2)transform.position;
             desiredVelocity.Normalize();
-            desiredVelocity *= maxSpeed;
+            desiredVelocity *= _settings.maxSpeed;
 
             Vector2 turnVector = desiredVelocity - velocity;
-            if (turnVector.magnitude > maxTurnSpeed) {
+            if (turnVector.magnitude > _settings.maxTurnSpeed) {
                 turnVector.Normalize();
-                turnVector *= maxTurnSpeed;
+                turnVector *= _settings.maxTurnSpeed;
             }
             
             return turnVector;
@@ -41,12 +45,12 @@ namespace Boids {
 
             Vector2 desiredVelocity;
             if(radius == 0)
-                desiredVelocity = difference.normalized * maxSpeed;
+                desiredVelocity = difference.normalized * _settings.maxSpeed;
             else
-                desiredVelocity = difference.normalized * (maxSpeed * distance / radius);
+                desiredVelocity = difference.normalized * (_settings.maxSpeed * distance / radius);
             
             Vector2 steering = desiredVelocity - velocity;
-            steering = Vector3.ClampMagnitude(steering, maxTurnSpeed);
+            steering = Vector3.ClampMagnitude(steering, _settings.maxTurnSpeed);
             return steering;
         }
         
@@ -65,11 +69,11 @@ namespace Boids {
         }
 
         public float GetMaxSpeed() {
-            return maxSpeed;
+            return _settings.maxSpeed;
         }
 
         public float GetMaxTurnSpeed() {
-            return maxTurnSpeed;
+            return _settings.maxTurnSpeed;
         }
     }
 }

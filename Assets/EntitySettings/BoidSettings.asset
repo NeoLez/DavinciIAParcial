@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c77ab48f414e54938e4c6dea0e8b1c, type: 3}
+  m_Name: BoidSettings
+  m_EditorClassIdentifier: 
+  _maxSpeed: 12
+  _maxTurnSpeed: 0.35
+  _fov: 100
+  _alignmentRadius: 4
+  _alignmentStrength: 0.626
+  _separationRadius: 1.5
+  _separationStrength: 0.796
+  _cohesionRadius: 6
+  _cohesionStrength: 0.415
+  _randomStrength: 0.1
+  _foodDetectionRange: 10
+  _hunterDetectionRange: 14
+  _circleBoundRadius: 35
+  _circleBoundStrength: 1.1
+  _highPerformanceMode: 1

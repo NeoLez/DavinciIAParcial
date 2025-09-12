@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Boids.SO;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -9,12 +10,14 @@ namespace Boids {
         
         [Header("Boids")]
         [SerializeField] private GameObject boidPrefab;
+        [SerializeField] private BoidSO boidSettings;
         [SerializeField] private float spawnRange;
         [SerializeField] private int number;
         [SerializeField] private bool generateBoids;
         
         [Header("Hunter")]
         [SerializeField] private GameObject hunterPrefab;
+        [SerializeField] private HunterSO hunterSettings;
         [SerializeField] private List<Target> patrolPoints;
         [SerializeField] private bool generateHunter;
 
@@ -67,14 +70,17 @@ namespace Boids {
             for (int i = 0; i < number; i++) {
                 GameObject boid = Instantiate(boidPrefab, Random.insideUnitCircle * spawnRange, Quaternion.identity);
                 Boid boidComponent = boid.GetComponent<Boid>();
-                boidComponent.Initialize(Random.insideUnitCircle);
+                boidComponent.Initialize(boidSettings);
+                boidComponent.SetInitialVelocity(Random.insideUnitCircle);
                 Boids.Add(boidComponent);
             }
         }
         
         private void GenerateHunter() {
             GameObject hunter = Instantiate(hunterPrefab);
-            hunter.GetComponent<Hunter>().SetPatrolPositions(new List<Target>(patrolPoints));
+            Hunter hunterComponent = hunter.GetComponent<Hunter>();
+            hunterComponent.Initialize(hunterSettings);
+            hunterComponent.SetPatrolPositions(new List<Target>(patrolPoints));
             Hunters.Add(hunter.GetComponent<Hunter>());
         }
 
