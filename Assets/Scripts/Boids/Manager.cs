@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Boids.SO;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Utils;
 using Random = UnityEngine.Random;
 

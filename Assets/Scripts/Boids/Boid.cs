@@ -5,21 +5,9 @@ using Random = UnityEngine.Random;
 
 namespace Boids
 {
-    public class Boid : MovementAgent {
-        [NonSerialized] private BoidSO _settings;
-
-        /// <summary>
-        /// Initializes the <c>Boid</c> to use the settings ScriptableObject provided as a parameter.
-        /// Also sets the settings for the <c>MovementAgent</c> superclass.
-        /// </summary>
-        /// <param name="settings">Settings ScriptableObject reference</param>
-        public void Initialize(BoidSO settings) {
-            base.Initialize(settings);
-            _settings = settings;
-        }
-
+    public class Boid : MovementAgent<BoidSO> {
         private void Update() {
-            float foodDistance = _settings.foodDetectionRange;
+            float foodDistance = Settings.foodDetectionRange;
             if (IsFoodNearby(out Target food, ref foodDistance)) {
                 if (foodDistance <= food.radius) {
                     ConsumeFood(food);
@@ -30,10 +18,7 @@ namespace Boids
             } else if (IsHunterNearby(out Hunter hunter)) {
                 AddVelocity(Flee(hunter.transform.position));
             } else if (AreBoidsNearby()) {
-                if(_settings.highPerformanceMode)
-                    AddVelocity(FlockingHighPerformance());
-                else
-                    AddVelocity(Flocking());
+                AddVelocity(Settings.highPerformanceMode ? FlockingHighPerformance() : Flocking());
             }
             else {
                 AddVelocity(RandomMovement());
@@ -58,7 +43,7 @@ namespace Boids
             GameObject newBoid = Instantiate(gameObject);
             newBoid.transform.position += (Vector3)Random.insideUnitCircle * 0.01f;
             Boid boidComponent = newBoid.GetComponent<Boid>();
-            boidComponent.Initialize(_settings);
+            boidComponent.Initialize(Settings);
             boidComponent.SetInitialVelocity(velocity);
             Manager.instance.Boids.Add(boidComponent);
         }
@@ -97,7 +82,7 @@ namespace Boids
             }
 
             if (closestDistance < Single.MaxValue) {
-                if (Vector2.Distance(newHunter!.transform.position, transform.position) <= _settings.hunterDetectionRange) {
+                if (Vector2.Distance(newHunter!.transform.position, transform.position) <= Settings.hunterDetectionRange) {
                     hunter = newHunter;
                     return true;
                 }
@@ -111,7 +96,7 @@ namespace Boids
         private bool AreBoidsNearby() {
             foreach (var boid in Manager.instance.Boids) {
                 if (boid == this) continue;
-                if (Vector2.Distance(boid.transform.position, transform.position) < Math.Max(_settings.alignmentRadius, _settings.cohesionRadius)) {
+                if (Vector2.Distance(boid.transform.position, transform.position) < Math.Max(Settings.alignmentRadius, Settings.cohesionRadius)) {
                     return true;
                 }
             }
@@ -120,9 +105,9 @@ namespace Boids
         }
 
         /// <returns>A Seek vector toward the center of the map.</returns>
-        public Vector2 AvoidEscapingBounds() {
-            if (transform.position.magnitude > _settings.circleBoundRadius) {
-                return Seek(Vector2.zero) * _settings.circleBoundStrength;
+        private Vector2 AvoidEscapingBounds() {
+            if (transform.position.magnitude > Settings.circleBoundRadius) {
+                return Seek(Vector2.zero) * Settings.circleBoundStrength;
             }
             return Vector2.zero;
         }
@@ -134,8 +119,8 @@ namespace Boids
                 if (boid == this) continue;
                 Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;
                 float distance = toOther.magnitude;
-                if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= _settings.fov) {
-                    if (distance <= _settings.alignmentRadius) {
+                if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= Settings.fov) {
+                    if (distance <= Settings.alignmentRadius) {
                         alignmentCount++;
                         alignmentSum += boid.velocity;
                     }  
@@ -143,8 +128,8 @@ namespace Boids
             }
             Vector2 alignmentSteering = Vector2.zero;
             if (alignmentCount == 0) return alignmentSteering;
-            Vector2 desired = alignmentSum.normalized * _settings.maxSpeed;
-            alignmentSteering = Seek(desired + (Vector2)transform.position) * _settings.alignmentStrength;
+            Vector2 desired = alignmentSum.normalized * Settings.maxSpeed;
+            alignmentSteering = Seek(desired + (Vector2)transform.position) * Settings.alignmentStrength;
             return alignmentSteering;
         }
 
@@ -155,7 +140,7 @@ namespace Boids
                 if (boid == this) continue;
                 Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;
                 float distance = toOther.magnitude;
-                if (distance <= _settings.cohesionRadius && Vector2.Angle(velocity, boid.transform.position - transform.position) <= _settings.fov) {
+                if (distance <= Settings.cohesionRadius && Vector2.Angle(velocity, boid.transform.position - transform.position) <= Settings.fov) {
                     cohesionCount++;
                     cohesionSum += (Vector2)boid.transform.position;
                 }
@@ -164,7 +149,7 @@ namespace Boids
             Vector2 cohesionSteering = Vector2.zero;
             if (cohesionCount == 0) return cohesionSteering;
             Vector2 center = cohesionSum / cohesionCount;
-            cohesionSteering = Seek(center) * _settings.cohesionStrength;
+            cohesionSteering = Seek(center) * Settings.cohesionStrength;
             return cohesionSteering;
         }
 
@@ -178,17 +163,17 @@ namespace Boids
                 Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;
                 float distance = toOther.magnitude;
                 
-                if (distance <= _settings.separationRadius) {
+                if (distance <= Settings.separationRadius) {
                     separationCount++;
                     Vector2 away = -toOther.normalized;
-                    float weight = _settings.separationRadius / distance;
+                    float weight = Settings.separationRadius / distance;
                     separationSum += away * weight;
                 }
             }
 
             Vector2 separationSteering = Vector2.zero;
             if (separationCount == 0) return separationSteering;
-            separationSteering = Seek(separationSum + (Vector2)transform.position) * _settings.separationStrength;
+            separationSteering = Seek(separationSum + (Vector2)transform.position) * Settings.separationStrength;
             return separationSteering;
         }
         
@@ -197,7 +182,7 @@ namespace Boids
         /// </summary>
         /// <returns>Flocking movement vector.</returns>
         private Vector2 Flocking() {
-            Vector2 randomSteer = _settings.randomStrength * Random.insideUnitCircle;
+            Vector2 randomSteer = Settings.randomStrength * Random.insideUnitCircle;
             return Separation() + Alignment() + Cohesion() + randomSteer;
         }
 
@@ -208,7 +193,7 @@ namespace Boids
         
         /// <returns>A pseudorandom movement vector.</returns>
         private Vector2 RandomMovement() {
-            if (Vector2.Angle(velocity, _randomVector) < 10 && velocity.magnitude > _settings.maxSpeed*0.95) {
+            if (Vector2.Angle(velocity, _randomVector) < 10 && velocity.magnitude > Settings.maxSpeed*0.95) {
                 _randomVector = Random.insideUnitCircle;
             }
 
@@ -236,23 +221,23 @@ namespace Boids
                 Vector2 toOther = (Vector2)boid.transform.position - (Vector2)transform.position;
                 float distance = toOther.magnitude;
                 
-                if (distance <= _settings.separationRadius) {
+                if (distance <= Settings.separationRadius) {
                     separationCount++;
                     Vector2 away = -toOther.normalized;
-                    float weight = _settings.separationRadius / distance;
+                    float weight = Settings.separationRadius / distance;
                     separationSum += away * weight;
                 }
                 else {
-                    if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= _settings.fov) {
-                        if (distance <= _settings.cohesionRadius) {
+                    if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= Settings.fov) {
+                        if (distance <= Settings.cohesionRadius) {
                             cohesionCount++;
                             cohesionSum += (Vector2)boid.transform.position;
                         } 
                     }
                     
                 }
-                if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= _settings.fov) {
-                    if (distance <= _settings.alignmentRadius) {
+                if (Vector2.Angle(velocity, boid.transform.position - transform.position) <= Settings.fov) {
+                    if (distance <= Settings.alignmentRadius) {
                         alignmentCount++;
                         alignmentSum += boid.velocity;
                     }  
@@ -262,22 +247,22 @@ namespace Boids
 
             Vector2 separationSteering = Vector2.zero;
             if (separationCount > 0) {
-                separationSteering = Seek(separationSum + (Vector2)transform.position) * _settings.separationStrength;
+                separationSteering = Seek(separationSum + (Vector2)transform.position) * Settings.separationStrength;
             }
 
             Vector2 alignmentSteering = Vector2.zero;
             if (alignmentCount > 0) {
-                Vector2 desired = alignmentSum.normalized * _settings.maxSpeed;
-                alignmentSteering = Seek(desired + (Vector2)transform.position) * _settings.alignmentStrength;
+                Vector2 desired = alignmentSum.normalized * Settings.maxSpeed;
+                alignmentSteering = Seek(desired + (Vector2)transform.position) * Settings.alignmentStrength;
             }
 
             Vector2 cohesionSteering = Vector2.zero;
             if (cohesionCount > 0) {
                 Vector2 center = cohesionSum / cohesionCount;
-                cohesionSteering = Seek(center) * _settings.cohesionStrength;
+                cohesionSteering = Seek(center) * Settings.cohesionStrength;
             }
             
-            Vector2 randomSteer = _settings.randomStrength * Random.insideUnitCircle;
+            Vector2 randomSteer = Settings.randomStrength * Random.insideUnitCircle;
             return separationSteering + alignmentSteering + cohesionSteering + randomSteer;
         }
     }
