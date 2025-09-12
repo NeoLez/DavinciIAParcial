@@ -9,29 +9,11 @@ namespace Boids.SO {
         [SerializeField] private float _viewDistance;
         [SerializeField] private float _boidEatDistance;
         [SerializeField] private float _maxEnergy;
-        public float timeToRecovery {
-            get => _timeToRecovery;
-            protected set => _timeToRecovery = value;
-        }
-        public float minimumPatrolPointDistance {
-            get => _minimumPatrolPointDistance;
-            protected set => _minimumPatrolPointDistance = value;
-        }
-        public float viewDistance {
-            get => _viewDistance;
-            protected set => _viewDistance = value;
-        }
-        public float stopSlowdownSpeed {
-            get => _stopSlowdownSpeed;
-            protected set => _stopSlowdownSpeed = value;
-        }
-        public float boidEatDistance {
-            get => _boidEatDistance;
-            protected set => _boidEatDistance = value;
-        }
-        public float maxEnergy {
-            get => _maxEnergy;
-            protected set => _maxEnergy = value;
-        }
+        public float timeToRecovery => _timeToRecovery;
+        public float minimumPatrolPointDistance => _minimumPatrolPointDistance;
+        public float viewDistance => _viewDistance;
+        public float stopSlowdownSpeed => _stopSlowdownSpeed;
+        public float boidEatDistance => _boidEatDistance;
+        public float maxEnergy => _maxEnergy;
     }
 }

@@ -6,14 +6,7 @@ namespace Boids.SO {
         [SerializeField] private float _maxSpeed;
         [SerializeField] private float _maxTurnSpeed;
         
-        public float maxSpeed {
-            get => _maxSpeed;
-            protected set => _maxSpeed = value;
-        }
-        
-        public float maxTurnSpeed {
-            get => _maxTurnSpeed;
-            protected set => _maxTurnSpeed = value;
-        }
+        public float maxSpeed => _maxSpeed;
+        public float maxTurnSpeed => _maxTurnSpeed;
     }
 }
