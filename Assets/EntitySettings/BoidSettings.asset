@@ -25,5 +25,5 @@ MonoBehaviour:
   _foodDetectionRange: 10
   _hunterDetectionRange: 14
   _circleBoundRadius: 35
-  _circleBoundStrength: 1.1
+  _circleBoundStrength: 1.25
   _highPerformanceMode: 1

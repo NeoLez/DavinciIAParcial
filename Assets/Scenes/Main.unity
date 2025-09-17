@@ -184,7 +184,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -259,6 +259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56cefd95cdea44c4a893dc7f183aeb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   radius: 1
 --- !u!1 &832442604
 GameObject:
@@ -366,6 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56cefd95cdea44c4a893dc7f183aeb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   radius: 1
 --- !u!1 &1491260294
 GameObject:
@@ -445,6 +447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56cefd95cdea44c4a893dc7f183aeb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gizmoColor: {r: 1, g: 0, b: 0, a: 1}
   radius: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

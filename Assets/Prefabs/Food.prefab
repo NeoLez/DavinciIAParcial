@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56cefd95cdea44c4a893dc7f183aeb6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0}
+  gizmoColor: {r: 0.0067079067, g: 1, b: 0, a: 1}
   radius: 1.5
 --- !u!1 &8857841278618341031
 GameObject:

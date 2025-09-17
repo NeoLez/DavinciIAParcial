@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Boids.SO;
 using UnityEngine;
 using Utils;
@@ -33,7 +34,7 @@ namespace Boids {
             _foodTimer = new Timer(foodSpawnRate);
             _cam = Camera.main;
         }
-
+        
         public readonly List<Boid> Boids = new();
         public readonly List<Target> FoodItems = new();
         public readonly List<Hunter> Hunters = new();
@@ -44,6 +45,7 @@ namespace Boids {
         public int amountBorn;
         
         private void Update() {
+            _cam.orthographicSize = boidSettings.circleBoundRadius + 10;
             Debug.Log($"Killed: {amountKilled} Born: {amountBorn}");
             if (generateBoids) {
                 generateBoids = false;
@@ -124,6 +126,11 @@ namespace Boids {
                 Destroy(foodToDelete.gameObject);
             }
             _foodsToDelete.Clear();
+        }
+
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, boidSettings.circleBoundRadius);
         }
     }
 }
