@@ -36,7 +36,7 @@ namespace Boids.HunterBehaviours {
             }
             
             if (minimumDistance < _eatDistance) {
-                Manager.instance.DeleteBoid(targetedBoid);
+                Manager.instance.Boids.Remove(targetedBoid);
                 Manager.instance.amountKilled++;
                 return;
             }

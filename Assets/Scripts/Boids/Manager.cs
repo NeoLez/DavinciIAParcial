@@ -104,30 +104,6 @@ namespace Boids {
             Hunters.Add(hunter.GetComponent<Hunter>());
         }
 
-        private readonly List<Boid> _boidsToDelete = new();
-        public void DeleteBoid(Boid boid) {
-            _boidsToDelete.Add(boid);
-        }
-        
-        private readonly List<Target> _foodsToDelete = new();
-        public void DeleteFood(Target food) {
-            _foodsToDelete.Add(food);
-        }
-
-        private void LateUpdate() {
-            foreach (var boidToDelete in _boidsToDelete) {
-                Boids.Remove(boidToDelete);
-                Destroy(boidToDelete.gameObject);
-            }
-            _boidsToDelete.Clear();
-            
-            foreach (var foodToDelete in _foodsToDelete) {
-                FoodItems.Remove(foodToDelete);
-                Destroy(foodToDelete.gameObject);
-            }
-            _foodsToDelete.Clear();
-        }
-
         private void OnDrawGizmos() {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, boidSettings.circleBoundRadius);
