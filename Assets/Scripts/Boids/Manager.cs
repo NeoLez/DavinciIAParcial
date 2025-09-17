@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 namespace Boids {
     public class Manager : MonoBehaviour {
         public static Manager instance { get; private set; }
+        private static Camera _cam;
         
         [Header("Boids")]
         [SerializeField] private GameObject boidPrefab;
@@ -30,6 +31,7 @@ namespace Boids {
         private void Awake() {
             instance = this;
             _foodTimer = new Timer(foodSpawnRate);
+            _cam = Camera.main;
         }
 
         public readonly List<Boid> Boids = new();
@@ -45,39 +47,55 @@ namespace Boids {
             Debug.Log($"Killed: {amountKilled} Born: {amountBorn}");
             if (generateBoids) {
                 generateBoids = false;
-                GenerateBoids();
+                GenerateBoidsArea();
             }
             if (generateHunter) {
                 generateHunter = false;
-                GenerateHunter();
+                GenerateHunter(Vector2.zero);
             }
 
             if (_foodTimer.HasFinished()) {
                 _foodTimer.AddTime(foodSpawnRate);
-                SpawnFood();
+                SpawnFoodArea();
+            }
+
+            if (Input.GetMouseButtonDown(0)) {
+                GenerateBoid(_cam.ScreenToWorldPoint(Input.mousePosition));
+            }
+            if (Input.GetMouseButtonDown(1)) {
+                GenerateHunter(_cam.ScreenToWorldPoint(Input.mousePosition));
+            }
+            if (Input.GetMouseButtonDown(2)) {
+                GenerateFood(_cam.ScreenToWorldPoint(Input.mousePosition));
             }
         }
 
-        private void SpawnFood() {
-            GameObject food = Instantiate(foodPrefab, Random.insideUnitCircle * foodSpawnRange, Quaternion.identity);
+        private void GenerateFood(Vector2 position) {
+            GameObject food = Instantiate(foodPrefab, position, Quaternion.identity);
             Target target = food.GetComponent<Target>();
             target.radius = foodPickupRange;
-            //target.position = food.transform.position;
             FoodItems.Add(target);
         }
+        private void SpawnFoodArea() {
+            GenerateFood(Random.insideUnitCircle * foodSpawnRange);
+        }
 
-        private void GenerateBoids() {
+        private void GenerateBoid(Vector2 position) {
+            GameObject boid = Instantiate(boidPrefab, position, Quaternion.identity);
+            Boid boidComponent = boid.GetComponent<Boid>();
+            boidComponent.Initialize(boidSettings);
+            boidComponent.SetInitialVelocity(Random.insideUnitCircle);
+            Boids.Add(boidComponent);
+        }
+        
+        private void GenerateBoidsArea() {
             for (int i = 0; i < numberOfBoids; i++) {
-                GameObject boid = Instantiate(boidPrefab, Random.insideUnitCircle * boidSpawnRange, Quaternion.identity);
-                Boid boidComponent = boid.GetComponent<Boid>();
-                boidComponent.Initialize(boidSettings);
-                boidComponent.SetInitialVelocity(Random.insideUnitCircle);
-                Boids.Add(boidComponent);
+                GenerateBoid(Random.insideUnitCircle * boidSpawnRange);
             }
         }
         
-        private void GenerateHunter() {
-            GameObject hunter = Instantiate(hunterPrefab);
+        private void GenerateHunter(Vector2 position) {
+            GameObject hunter = Instantiate(hunterPrefab, position, Quaternion.identity);
             Hunter hunterComponent = hunter.GetComponent<Hunter>();
             hunterComponent.Initialize(hunterSettings);
             hunterComponent.SetPatrolPositions(new List<Target>(hunterPatrolPoints));
