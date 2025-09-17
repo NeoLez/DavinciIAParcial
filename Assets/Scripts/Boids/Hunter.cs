@@ -14,7 +14,7 @@ namespace Boids {
 
         private void Start() {
             _stateMachine = new();
-            _stateMachine.AddState(HunterStates.Rest, new RestState(_stateMachine, this, Settings.timeToRecovery));
+            _stateMachine.AddState(HunterStates.Rest, new RestState(_stateMachine, this, Settings.timeToRecovery, Settings.viewDistance));
             _stateMachine.AddState(HunterStates.Patrol, new PatrolState(_stateMachine, this, _patrolPositions, Settings.minimumPatrolPointDistance, Settings.viewDistance));
             _stateMachine.AddState(HunterStates.Hunting, new HuntingState(_stateMachine, this, Settings.viewDistance, Settings.boidEatDistance));
             _stateMachine.ChangeState(HunterStates.Patrol);
