@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Boids.SO;
+using DecisionTree;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -9,6 +9,8 @@ namespace Boids {
     public class Manager : MonoBehaviour {
         public static Manager instance { get; private set; }
         private static Camera _cam;
+
+        public BoidNode boidDecisionTree;
         
         [Header("Boids")]
         [SerializeField] private GameObject boidPrefab;
@@ -85,6 +87,7 @@ namespace Boids {
         private void GenerateBoid(Vector2 position) {
             GameObject boid = Instantiate(boidPrefab, position, Quaternion.identity);
             Boid boidComponent = boid.GetComponent<Boid>();
+            boidComponent.uglyDecisionTree = boidDecisionTree;
             boidComponent.Initialize(boidSettings);
             boidComponent.SetInitialVelocity(Random.insideUnitCircle);
             Boids.Add(boidComponent);

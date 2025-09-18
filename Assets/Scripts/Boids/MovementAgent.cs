@@ -7,7 +7,7 @@ namespace Boids {
         protected Vector2 velocity; //CHANGING THIS TO A PROPERTY MAKES EVERYTHING EXPLODE :3
         public Vector2 GetVelocity() => velocity;
 
-        [NonSerialized] protected T Settings;
+        [NonSerialized] public T Settings;
         
         /// <summary>
         /// Initializes the <c>MovementAgent</c> to use the settings ScriptableObject provided as a parameter.

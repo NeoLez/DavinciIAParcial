@@ -1,12 +1,28 @@
 using System;
 using Boids.SO;
+using DecisionTree;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Boids
 {
     public class Boid : MovementAgent<BoidSO> {
+        public BoidNode uglyDecisionTree;
         private void Update() {
+            if (Settings.highPerformanceMode) {
+                DecisionTreeHighPerformance();
+            }
+            else {
+                uglyDecisionTree.Execute(this);
+            }
+            
+            AddVelocity(AvoidEscapingBounds());
+
+            ProcessMovement();
+        }
+
+        private void DecisionTreeHighPerformance() {
             float foodDistance = Settings.foodDetectionRange;
             if (IsFoodNearby(out Target food, ref foodDistance)) {
                 if (foodDistance <= food.radius) {
@@ -18,18 +34,14 @@ namespace Boids
             } else if (IsHunterNearby(out Hunter hunter)) {
                 AddVelocity(Flee(hunter.transform.position));
             } else if (AreBoidsNearby()) {
-                AddVelocity(Settings.highPerformanceMode ? FlockingHighPerformance() : Flocking());
+                AddVelocity(FlockingHighPerformance());
             }
             else {
                 AddVelocity(RandomMovement());
             }
-            
-            AddVelocity(AvoidEscapingBounds());
-
-            ProcessMovement();
         }
 
-        private void ConsumeFood(Target food) {
+        public void ConsumeFood(Target food) {
             Manager.instance.FoodItems.Remove(food);
             Destroy(food.gameObject);
             Reproduce();
@@ -51,7 +63,7 @@ namespace Boids
         /// <param name="food">Returns the closest food item to the <c>Boid</c> which is also closer than minimumDistance. If not found, returns null</param>
         /// <param name="minimumDistance">Food items that are further from the <c>Boid</c> than this are ignored. The value is altered to match the distance from the <c>Boid</c> to the closest food item if found.</param>
         /// <returns>True if food was found. Otherwise, false.</returns>
-        private bool IsFoodNearby(out Target food, ref float minimumDistance) {
+        public bool IsFoodNearby(out Target food, ref float minimumDistance) {
             food = null;
             foreach (var foodItem in Manager.instance.FoodItems) {
                 float dist = Vector2.Distance(transform.position, foodItem.transform.position);
@@ -69,7 +81,7 @@ namespace Boids
         
         /// <param name="hunter">Returns the hunter's <c>Target</c> or null if none is found.</param>
         /// <returns>True if there is a <c>Hunter</c> within view range.</returns>
-        private bool IsHunterNearby(out Hunter hunter) {
+        public bool IsHunterNearby(out Hunter hunter) {
             float closestDistance = Single.MaxValue;
             Hunter newHunter = null;
             
@@ -93,7 +105,7 @@ namespace Boids
         }
         
         /// <returns>True if <c>Boid</c>s are found within the alignment radius or cohesion radius, whichever is biggest.</returns>
-        private bool AreBoidsNearby() {
+        public bool AreBoidsNearby() {
             foreach (var boid in Manager.instance.Boids) {
                 if (boid == this) continue;
                 if (Vector2.Distance(boid.transform.position, transform.position) < Math.Max(Settings.alignmentRadius, Settings.cohesionRadius)) {
@@ -192,7 +204,7 @@ namespace Boids
         }
         
         /// <returns>A pseudorandom movement vector.</returns>
-        private Vector2 RandomMovement() {
+        public Vector2 RandomMovement() {
             if (Vector2.Angle(velocity, _randomVector) < 10 && velocity.magnitude > Settings.maxSpeed*0.95) {
                 _randomVector = Random.insideUnitCircle;
             }
@@ -211,7 +223,7 @@ namespace Boids
         /// Calculates the flocking movement vector as the sum of the Separation, Alignment and Cohesion rules in a more computationally efficient way.
         /// </summary>
         /// <returns>Flocking movement vector.</returns>
-        private Vector2 FlockingHighPerformance() {
+        public Vector2 FlockingHighPerformance() {
             int alignmentCount = 0, separationCount = 0, cohesionCount = 0;
             Vector2 alignmentSum = Vector2.zero, separationSum = Vector2.zero, cohesionSum = Vector2.zero;
 
