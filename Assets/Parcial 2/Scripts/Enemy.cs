@@ -1,34 +1,42 @@
-using System;
+using System.Collections.Generic;
+using Parcial_2.Scripts.EnemyBehaviours;
+using StateMachine;
 using UnityEngine;
 
 namespace Parcial_2.Scripts {
     public class Enemy : MonoBehaviour{
-        [SerializeField] [Range(0, 50)] private float soundDetectionRadius = 2;
-        [SerializeField] [Range(0, 50)] private float viewDetectionRadius = 10;
-        [SerializeField] [Range(0, 2 * Mathf.PI)] private float viewDetectionAngle = 60;
-        [SerializeField] [Range(-Mathf.PI, Mathf.PI)] private double viewDetectionAngleOffset;
+        [SerializeField] [Range(0, 50)] public float soundDetectionRadius = 2;
+        [SerializeField] [Range(0, 50)] public float viewDetectionRadius = 10;
+        [SerializeField] [Range(0, 2 * Mathf.PI)] public float viewDetectionAngle = 60;
+        [SerializeField] [Range(-Mathf.PI, Mathf.PI)] public double viewDetectionAngleOffset;
+        [SerializeField] private List<Node> path= new();
+        public float speed;
+        public float killDistance;
         
-        [SerializeField] private bool showViewCone;
-        [SerializeField] private bool showSoundDetectionSphere;
-        [SerializeField] [Range(3, 100)] private int gizmoResolution = 3;
-
-        private Node _node;
+        public Node _node { get; private set; }
         private NodeManager _nodeManager;
-        
-        public Transform target;
+        private StateMachine<EnemyBehaviour> _stateMachine;
 
         private void Start() {
             _node = GetComponent<Node>();
             _nodeManager = NodeManager.Instance;
+            _stateMachine = new();
+            PatrolState patrolState = new(_stateMachine, path, this);
+            _stateMachine.AddState(EnemyBehaviour.Patrol, patrolState);
+            ChaseState chaseState = new(_stateMachine, this, killDistance);
+            _stateMachine.AddState(EnemyBehaviour.Chase, chaseState);
+            _stateMachine.ChangeState(EnemyBehaviour.Patrol);
         }
 
         private void Update() {
-            if (IsPointInViewRadius(_nodeManager.player.position)) {
-                _nodeManager.enemyTarget.transform.position = _nodeManager.player.position;
+            if (IsPointInViewRadius(_nodeManager.player.transform.position)) {
+                _nodeManager.enemyTarget.transform.position = _nodeManager.player.transform.position;
                 _nodeManager.AddNode(_nodeManager.enemyTarget);
                 _nodeManager.UpdateNode(_nodeManager.enemyTarget);
             }
             _nodeManager.UpdateNode(_node);
+            
+            _stateMachine.UpdateState(Time.deltaTime);
         }
 
         private bool IsPointInViewRadius(Vector3 pos) {
@@ -51,6 +59,12 @@ namespace Parcial_2.Scripts {
             return false;
         }
         
+        
+        
+        
+        [SerializeField] private bool showViewCone;
+        [SerializeField] private bool showSoundDetectionSphere;
+        [SerializeField] [Range(3, 100)] private int gizmoResolution = 3;
         private void OnDrawGizmos() {
             if (showViewCone) {
                 Vector3[] points = new Vector3[gizmoResolution];

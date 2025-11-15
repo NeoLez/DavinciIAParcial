@@ -1,5 +1,3 @@
-using System;
-using Parcial_2.Scripts;
 using UnityEngine;
 
 public class Player : MonoBehaviour {

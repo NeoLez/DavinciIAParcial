@@ -140,10 +140,13 @@ MonoBehaviour:
   viewDetectionRadius: 3.1
   viewDetectionAngle: 0.96
   viewDetectionAngleOffset: 0
+  path: []
+  speed: 2
+  killDistance: 0
+  target: {fileID: 0}
   showViewCone: 1
   showSoundDetectionSphere: 1
   gizmoResolution: 12
-  target: {fileID: 0}
 --- !u!114 &4801017573168501755
 MonoBehaviour:
   m_ObjectHideFlags: 0

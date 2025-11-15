@@ -11,7 +11,7 @@ namespace Parcial_2.Scripts {
         [SerializeField] private List<Node> nodeStartList;
         private HashSet<Node> nodes = new();
         [SerializeField] public Node enemyTarget;
-        [SerializeField] public Transform player;
+        [SerializeField] public GameObject player;
         [SerializeField] private LayerMask layerMask;
 
         private void Awake() {
@@ -23,12 +23,15 @@ namespace Parcial_2.Scripts {
             nodes.Add(node);
         }
 
+        public bool ContainsNode(Node node) {
+            return nodes.Contains(node);
+        }
+
         public void UpdateNode(Node node) {
             if (!nodes.Contains(node)) return;
             
             
             List<Node> visibleNodes = FindAllAccessibleNodes(node);
-            Debug.Log(node.name + " Z" +visibleNodes.Count);
             
             if (node.outConnections) {
                 node.neighbours = visibleNodes;
@@ -79,9 +82,50 @@ namespace Parcial_2.Scripts {
             Vector2 direction = a.transform.position - b.transform.position;
             return !Physics2D.Raycast(b.transform.position, direction.normalized, direction.magnitude, layerMask);
         }
+        
+        public Stack<Node> CalculatePath(Node start, Node goal) {
+            if(!nodes.Contains(start) || !nodes.Contains(goal)) return null;
+            
+            Stack<Node> steps = new();
+            PriorityQueue<Node> frontier = new();
+            frontier.Enqueue(start, 0);
+            Dictionary<Node, Node> came_from = new();
+            Dictionary<Node, float> cost_so_far = new();
+            cost_so_far.Add(start, 0);
 
-        public List<Node> Pathfind(Node start, Node goal) {
-            return null;
+            while (frontier.Count != 0) {
+                Node current = frontier.Dequeue();
+
+                if (current == goal) break;
+
+                foreach (var next in current.neighbours) {
+                    float new_cost = cost_so_far[current] + CalculateCost(current, next);
+                    if (!cost_so_far.ContainsKey(next) || new_cost < cost_so_far[next]) {
+                        cost_so_far[next] = new_cost;
+                        frontier.Enqueue(next, new_cost + CalculateHeuristic(goal, next));
+                        came_from[next] = current;
+                    }
+                }
+            }
+
+            if (cost_so_far.ContainsKey(goal)) {
+                Node current = goal;
+                steps.Push(goal);
+                while (current != start) {
+                    current = came_from[current];
+                    steps.Push(current);
+                }
+            }
+            
+            return steps;
+        }
+
+        private float CalculateCost(Node a, Node b) {
+            return Vector2.Distance(a.transform.position, b.transform.position);
+        }
+
+        private float CalculateHeuristic(Node a, Node b) {
+            return Vector2.Distance(a.transform.position, b.transform.position);
         }
     }
 }
