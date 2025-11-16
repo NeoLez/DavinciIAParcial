@@ -51,7 +51,7 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                 }
             }
             enemy.transform.position += (node.transform.position - enemy.transform.position).normalized * maxDistanceThisFrame;
-            enemy.viewDetectionAngleOffset = Vector2.Angle(Vector2.right, distanceVector) * Mathf.Deg2Rad;
+            enemy.viewDetectionAngleOffset = Mathf.Atan2(distanceVector.y,distanceVector.x);
 
             if (Vector2.Distance(NodeManager.Instance.player.transform.position, enemy.transform.position) <= killDistance) {
                 Debug.Log("You got eaten :c");

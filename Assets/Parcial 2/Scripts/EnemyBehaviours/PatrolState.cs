@@ -43,7 +43,7 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                     }
                 
                     enemy.transform.position += distanceVector.normalized.ToVector3() * maxDistanceThisFrame;
-                    enemy.viewDetectionAngleOffset = Vector2.Angle(Vector2.right, distanceVector) * Mathf.Deg2Rad;
+                    enemy.viewDetectionAngleOffset = Mathf.Atan2(distanceVector.y,distanceVector.x);
                 }
                 else {
                     pathToNode = NodeManager.Instance.CalculatePath(enemy._node, node);
@@ -54,6 +54,7 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                 Node node = pathToNode.Peek();
                 Vector2 distanceVector = node.transform.position - enemy.transform.position;
                 float distanceToTarget = distanceVector.magnitude;
+                distanceVector.Normalize();
                 float maxDistanceThisFrame = enemy.speed * deltaTime;
 
                 if (distanceToTarget < maxDistanceThisFrame) {
@@ -62,7 +63,7 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                 }
                 
                 enemy.transform.position += (node.transform.position - enemy.transform.position).normalized * maxDistanceThisFrame;
-                enemy.viewDetectionAngleOffset = Vector2.Angle(Vector2.right, distanceVector) * Mathf.Deg2Rad;
+                enemy.viewDetectionAngleOffset = Mathf.Atan2(distanceVector.y,distanceVector.x);
             }
         }
     }
