@@ -24,6 +24,7 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
 
         public void OnUpdate(float deltaTime) {
             if (NodeManager.Instance.ContainsNode(NodeManager.Instance.enemyTarget)) {
+                pathToNode?.Clear();
                 stateMachine.ChangeState(EnemyBehaviour.Chase);
                 return;
             }
