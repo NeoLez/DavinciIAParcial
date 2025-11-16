@@ -30,10 +30,16 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                 stateMachine.ChangeState(EnemyBehaviour.Patrol); 
                 return;
             }
-            
+
+            if (pathToNode.Count == 0) {
+                pathToNode = NodeManager.Instance.CalculatePath(enemy._node,
+                    NodeManager.Instance.GetClosestNode(NodeManager.Instance.player.transform.position, node1 => node1.inConnections && node1.outConnections)
+                );
+            }
             pathToNode.Pop();
             Node node = pathToNode.Peek();
-            float distanceToTarget = (node.transform.position - enemy.transform.position).magnitude;
+            Vector2 distanceVector = node.transform.position - enemy.transform.position;
+            float distanceToTarget = distanceVector.magnitude;
             float maxDistanceThisFrame = enemy.speed * deltaTime;
 
             if (distanceToTarget < maxDistanceThisFrame) {
@@ -45,9 +51,10 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                 }
             }
             enemy.transform.position += (node.transform.position - enemy.transform.position).normalized * maxDistanceThisFrame;
+            enemy.viewDetectionAngleOffset = Vector2.Angle(Vector2.right, distanceVector) * Mathf.Deg2Rad;
 
             if (Vector2.Distance(NodeManager.Instance.player.transform.position, enemy.transform.position) <= killDistance) {
-                GameObject.Destroy(NodeManager.Instance.player.gameObject);
+                Debug.Log("You got eaten :c");
             }
         }
     }

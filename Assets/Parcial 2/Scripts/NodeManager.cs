@@ -20,6 +20,8 @@ namespace Parcial_2.Scripts {
         }
 
         public void AddNode(Node node) {
+            if (nodes.Contains(node)) return;
+            
             nodes.Add(node);
         }
 
@@ -39,7 +41,8 @@ namespace Parcial_2.Scripts {
 
             if (node.inConnections) {
                 foreach (var n in visibleNodes) {
-                    n.neighbours.Add(node);
+                    if (!n.neighbours.Contains(node))
+                        n.neighbours.Add(node);
                 }
             }
         }
@@ -127,6 +130,21 @@ namespace Parcial_2.Scripts {
 
         private float CalculateCost(Node a, Node b) {
             return Vector2.Distance(a.transform.position, b.transform.position);
+        }
+
+        public Node GetClosestNode(Vector2 position, Func<Node, bool> condition) {
+            Node closest = null;
+            float closestDistance = float.MaxValue;
+            foreach (var node in nodes) {
+                if (!condition(node)) continue;
+                float distance  = Vector2.Distance(position, node.transform.position);
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closest = node;
+                }
+            }
+
+            return closest;
         }
 
         private float CalculateHeuristic(Node a, Node b) {

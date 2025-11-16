@@ -33,7 +33,8 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                 var node = path[currentIndex];
             
                 if (enemy._node.neighbours.Contains(node)) {
-                    float distanceToTarget = (node.transform.position - enemy.transform.position).magnitude;
+                    Vector2 distanceVector = node.transform.position - enemy.transform.position;
+                    float distanceToTarget = distanceVector.magnitude;
                     float maxDistanceThisFrame = enemy.speed * deltaTime;
 
                     if (distanceToTarget < maxDistanceThisFrame) {
@@ -41,7 +42,8 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                         currentIndex = (currentIndex + 1) % path.Count;
                     }
                 
-                    enemy.transform.position += (node.transform.position - enemy.transform.position).normalized * maxDistanceThisFrame;
+                    enemy.transform.position += distanceVector.normalized.ToVector3() * maxDistanceThisFrame;
+                    enemy.viewDetectionAngleOffset = Vector2.Angle(Vector2.right, distanceVector) * Mathf.Deg2Rad;
                 }
                 else {
                     pathToNode = NodeManager.Instance.CalculatePath(enemy._node, node);
@@ -50,7 +52,8 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
 
             if (pathToNode != null && pathToNode.Count != 0) {
                 Node node = pathToNode.Peek();
-                float distanceToTarget = (node.transform.position - enemy.transform.position).magnitude;
+                Vector2 distanceVector = node.transform.position - enemy.transform.position;
+                float distanceToTarget = distanceVector.magnitude;
                 float maxDistanceThisFrame = enemy.speed * deltaTime;
 
                 if (distanceToTarget < maxDistanceThisFrame) {
@@ -59,6 +62,7 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                 }
                 
                 enemy.transform.position += (node.transform.position - enemy.transform.position).normalized * maxDistanceThisFrame;
+                enemy.viewDetectionAngleOffset = Vector2.Angle(Vector2.right, distanceVector) * Mathf.Deg2Rad;
             }
         }
     }
