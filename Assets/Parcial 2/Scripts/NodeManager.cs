@@ -12,7 +12,7 @@ namespace Parcial_2.Scripts {
         private HashSet<Node> nodes = new();
         [SerializeField] public Node enemyTarget;
         [SerializeField] public GameObject player;
-        [SerializeField] private LayerMask layerMask;
+        [SerializeField] public LayerMask layerMask;
 
         private void Awake() {
             Instance = this;
@@ -116,7 +116,12 @@ namespace Parcial_2.Scripts {
                     steps.Push(current);
                 }
             }
-            
+
+            if (steps.Count == 0) {
+                Debug.Log("No path found");
+                Debug.Log(start.gameObject.name);
+                Debug.Log(goal.gameObject.name);
+            }
             return steps;
         }
 

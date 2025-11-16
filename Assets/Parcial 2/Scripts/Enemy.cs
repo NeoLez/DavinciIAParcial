@@ -30,9 +30,12 @@ namespace Parcial_2.Scripts {
 
         private void Update() {
             if (IsPointInViewRadius(_nodeManager.player.transform.position)) {
-                _nodeManager.enemyTarget.transform.position = _nodeManager.player.transform.position;
-                _nodeManager.AddNode(_nodeManager.enemyTarget);
-                _nodeManager.UpdateNode(_nodeManager.enemyTarget);
+                Vector2 direction = _nodeManager.player.transform.position - transform.position;
+                if (!Physics2D.Raycast(transform.position, direction.normalized, direction.magnitude, NodeManager.Instance.layerMask)) {
+                    _nodeManager.enemyTarget.transform.position = _nodeManager.player.transform.position;
+                    _nodeManager.AddNode(_nodeManager.enemyTarget);
+                    _nodeManager.UpdateNode(_nodeManager.enemyTarget);
+                } 
             }
             _nodeManager.UpdateNode(_node);
             
