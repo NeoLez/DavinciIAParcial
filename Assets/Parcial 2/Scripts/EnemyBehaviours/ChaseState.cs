@@ -35,6 +35,7 @@ namespace Parcial_2.Scripts.EnemyBehaviours {
                 pathToNode = NodeManager.Instance.CalculatePath(enemy._node,
                     NodeManager.Instance.GetClosestNode(NodeManager.Instance.player.transform.position, node1 => node1.inConnections && node1.outConnections)
                 );
+                if (pathToNode.Count == 0) return;
             }
             pathToNode.Pop();
             Node node = pathToNode.Peek();

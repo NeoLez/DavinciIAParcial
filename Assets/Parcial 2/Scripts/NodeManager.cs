@@ -36,12 +36,15 @@ namespace Parcial_2.Scripts {
             List<Node> visibleNodes = FindAllAccessibleNodes(node);
             
             if (node.outConnections) {
-                node.neighbours = visibleNodes;
+                foreach (var visibleNode in visibleNodes) {
+                    if (visibleNode.inConnections)
+                        node.neighbours = visibleNodes;
+                }
             }
 
             if (node.inConnections) {
                 foreach (var n in visibleNodes) {
-                    if (!n.neighbours.Contains(node))
+                    if (n.outConnections && !n.neighbours.Contains(node))
                         n.neighbours.Add(node);
                 }
             }
@@ -120,11 +123,6 @@ namespace Parcial_2.Scripts {
                 }
             }
 
-            if (steps.Count == 0) {
-                Debug.Log("No path found");
-                Debug.Log(start.gameObject.name);
-                Debug.Log(goal.gameObject.name);
-            }
             return steps;
         }
 
