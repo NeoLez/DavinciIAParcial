@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e1f763ad2bc4a79b14027b5c1508b75, type: 3}
+  m_Name: Leader
+  m_EditorClassIdentifier: Assembly-CSharp::Final.Scripts.EntitySettings.LeaderSettingsSO
+  _soundDetectionRadius: 1
+  _viewDetectionRadius: 10
+  _viewDetectionAngle: 1.2
+  _speed: 8
+  _attackDistance: 2
+  _showViewCone: 1
+  _showSoundDetectionSphere: 1
+  _gizmoResolution: 8
+  _mouseClickCommand: 0
+  _maxHealth: 10
+  _fleeHealth: 2
+  _entityLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  _attackCooldown: 1
+  _attackDamage: 1
+  _onMoveAttackCooldown: 2
+  _size: 0.5
