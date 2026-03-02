@@ -20,7 +20,7 @@ namespace Final.Scripts.EntityBehaviours
         public void OnEnter()
         {
             closestEnemy = _leader.GetNearestEnemiesInLOS();
-            Debug.Log(_leader.name + " has started attacking " + closestEnemy.GetGameObject().name);
+            _leader.SetColor(Color.red);
         }
 
         public void OnExit()
@@ -39,8 +39,8 @@ namespace Final.Scripts.EntityBehaviours
             if (Input.GetMouseButtonDown(_leader.settings.MouseClickCommand))
             {
                 closestEnemy = null;
-                _stateMachine.ChangeState(LeaderBehaviours.Move);
                 _leader._goal.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                _stateMachine.ChangeState(LeaderBehaviours.Move);
                 return;
             }
 

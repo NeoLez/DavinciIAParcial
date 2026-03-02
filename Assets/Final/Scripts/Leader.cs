@@ -17,6 +17,7 @@ namespace Final.Scripts
         private PointManager _pointManager;
         private StateMachine<LeaderBehaviours> _stateMachine;
         [SerializeField] private int health;
+        [SerializeField] private SpriteRenderer sprite;
         public Team team;
         
         private void Start() {
@@ -27,7 +28,8 @@ namespace Final.Scripts
             _stateMachine.AddState(LeaderBehaviours.Move, new LeaderMoveBehaviour(_stateMachine, this, _goal));
             _stateMachine.AddState(LeaderBehaviours.Attack, new LeaderAttackBehaviour(_stateMachine, this));
             _stateMachine.AddState(LeaderBehaviours.Flee, new LeaderFleeBehaviour(_stateMachine, this));
-            _stateMachine.ChangeState(LeaderBehaviours.Move);
+            _stateMachine.AddState(LeaderBehaviours.Idle, new LeaderIdleBehaviour(_stateMachine, this));
+            _stateMachine.ChangeState(LeaderBehaviours.Idle);
         }
 
         private void Update()
@@ -58,13 +60,22 @@ namespace Final.Scripts
             return settings.Size;
         }
 
+        public Team GetTeam() {
+            return team;
+        }
+
+        public void SetColor(Color color) {
+            sprite.color = color;
+        }
+
         public List<IEntity> GetEnemiesInLOS()
         {
             List<IEntity> res = new();
             var entities = Physics2D.OverlapCircleAll(transform.position, settings.ViewDetectionRadius, settings.EntityLayer);
             foreach (var entity in entities)
             {
-                if (entity.gameObject == gameObject) break;
+                if (entity.gameObject == gameObject) continue;
+                if (entity.gameObject.GetComponent<IEntity>().GetTeam() == team) continue;
                 if (IsPointInLOS(entity.transform.position))
                 {
                     res.Add(entity.gameObject.GetComponent<IEntity>());
@@ -82,6 +93,7 @@ namespace Final.Scripts
             foreach (var entity in entities)
             {
                 if (entity.gameObject == gameObject) continue;
+                if (entity.gameObject.GetComponent<IEntity>().GetTeam() == team) continue;
                 if (IsPointInLOS(entity.transform.position))
                 {
                     float distance = Vector2.Distance(entity.transform.position, transform.position);
@@ -101,7 +113,8 @@ namespace Final.Scripts
             var entities = Physics2D.OverlapCircleAll(transform.position, settings.ViewDetectionRadius, settings.EntityLayer);
             foreach (var entity in entities)
             {
-                if (entity.gameObject == gameObject) break;
+                if (entity.gameObject == gameObject) continue;
+                if (entity.gameObject.GetComponent<IEntity>().GetTeam() == team) continue;
                 if (IsPointInLOS(entity.transform.position))
                 {
                     return true;

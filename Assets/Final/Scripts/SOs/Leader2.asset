@@ -22,7 +22,7 @@ MonoBehaviour:
   _gizmoResolution: 8
   _mouseClickCommand: 1
   _maxHealth: 10
-  _fleeHealth: 10
+  _fleeHealth: 3
   _entityLayer:
     serializedVersion: 2
     m_Bits: 128

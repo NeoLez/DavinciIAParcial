@@ -21,7 +21,7 @@ namespace Final.Scripts.EntityBehaviours
         
         public void OnEnter()
         {
-            Debug.Log(_leader.name + " has started moving ");
+            _leader.SetColor(Color.green);
             startAttackCooldown = Time.time + _leader.settings.OnMoveAttackCooldown;
             StartPath();
         }
@@ -39,10 +39,9 @@ namespace Final.Scripts.EntityBehaviours
                 return;
             }
 
-            //Debug.Log(_leader.name + " " + _leader.GetEnemiesInLOS().Count);
+            
             if (Time.time >= startAttackCooldown && _leader.AreEnemiesInLOS())
             {
-                //Debug.Log(_leader.gameObject.name);
                 _stateMachine.ChangeState(LeaderBehaviours.Attack);
                 return;
             }
@@ -56,6 +55,7 @@ namespace Final.Scripts.EntityBehaviours
 
             if (_path == null || _path.Count == 0)
             {
+                _stateMachine.ChangeState(LeaderBehaviours.Idle);
                 return;
             };
             

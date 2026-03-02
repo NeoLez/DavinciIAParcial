@@ -5,5 +5,6 @@ namespace Final.Scripts.EntityBehaviours
         Attack,
         Move,
         Flee,
+        Idle,
     }
 }

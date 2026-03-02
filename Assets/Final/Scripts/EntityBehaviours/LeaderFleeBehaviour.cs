@@ -18,7 +18,7 @@ namespace Final.Scripts.EntityBehaviours
         
         public void OnEnter()
         {
-            Debug.Log(_leader.gameObject.name + " is fleeing");
+            _leader.SetColor(Color.blue);
             StartPath(_leader.team.teamBase);
         }
 
@@ -29,6 +29,11 @@ namespace Final.Scripts.EntityBehaviours
 
         public void OnUpdate(float deltaTime)
         {
+            if (_leader.GetHealth() == _leader.settings.MaxHealth) {
+                _stateMachine.ChangeState(LeaderBehaviours.Idle);
+                return;
+            }
+            
             if (_path == null || _path.Count == 0)
             {
                 return;
@@ -50,16 +55,10 @@ namespace Final.Scripts.EntityBehaviours
         
         private void StartPath(Point goal)
         {
-            goal.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             PointManager.Instance.UpdatePoint(goal);
             PointManager.Instance.UpdatePoint(_leader._point);
             _path = PointManager.Instance.CalculatePath(_leader._point, goal);
             if (_path == null || _path.Count <= 1) return;
-            Debug.Log("aienaien");
-            while (_path.Count>1)
-            {
-                Debug.Log(_path.Pop().name);
-            }
             
             _path.Pop();
         }

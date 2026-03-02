@@ -19,8 +19,10 @@ public class CameraController : MonoBehaviour
     {
         targetPos = cam.transform.position;
         targetSize = cam.orthographicSize;
+        prevMousePos = Input.mousePosition;
     }
 
+    private Vector2 prevMousePos;
     private void Update()
     {
         if (Input.mouseScrollDelta != Vector2.zero)
@@ -40,9 +42,10 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetMouseButton(2))
         {
-            targetPos -= (Vector2)Input.mousePositionDelta * (movementSpeed * cam.orthographicSize);
+            targetPos -= ((Vector2)Input.mousePosition - prevMousePos) * (movementSpeed * cam.orthographicSize);
         }
 
+        prevMousePos = Input.mousePosition;
 
         cam.transform.position = Vector2.Lerp(cam.transform.position, targetPos, smoothing);
         cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetSize, smoothing);

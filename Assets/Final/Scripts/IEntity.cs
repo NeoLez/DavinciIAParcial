@@ -8,5 +8,7 @@ namespace Final.Scripts
         public int GetHealth();
         public GameObject GetGameObject();
         public float GetSize();
+        public Team GetTeam();
+        public void SetColor(Color color);
     }
 }
