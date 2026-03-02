@@ -71,6 +71,7 @@ namespace Final.Scripts.EntityBehaviours {
         
         public Vector2 velocity;
         protected void ProcessMovement() {
+            if (float.IsNaN(velocity.x) || float.IsNaN(velocity.y)) velocity = Vector2.zero;
             if (velocity.magnitude > settings.Speed) {
                 velocity.Normalize();
                 velocity *= settings.Speed;
