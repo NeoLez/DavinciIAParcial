@@ -24,6 +24,8 @@ namespace Final.Scripts.EntityBehaviours
             _leader.SetColor(Color.green);
             startAttackCooldown = Time.time + _leader.settings.OnMoveAttackCooldown;
             StartPath();
+            
+            _leader.team.OnLaderChangedState?.Invoke(LeaderBehaviours.Move);
         }
 
         public void OnExit()
@@ -58,6 +60,11 @@ namespace Final.Scripts.EntityBehaviours
                 _stateMachine.ChangeState(LeaderBehaviours.Idle);
                 return;
             };
+            
+            if (_path.Peek().movingPoing && !PointManager.Instance.ArePointsInView(_path.Peek(), _leader._point)) {
+                StartPath();
+                return;
+            }
             
             Vector2 distanceVector = _path.Peek().transform.position - _leader.transform.position;
             float distance = distanceVector.magnitude;

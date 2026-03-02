@@ -17,6 +17,7 @@ namespace Final.Scripts.EntityBehaviours
         public void OnEnter()
         {
             _leader.SetColor(Color.white);
+            _leader.team.OnLaderChangedState?.Invoke(LeaderBehaviours.Idle);
         }
 
         public void OnExit()

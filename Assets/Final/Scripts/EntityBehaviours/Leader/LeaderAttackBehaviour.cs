@@ -21,6 +21,7 @@ namespace Final.Scripts.EntityBehaviours
         {
             closestEnemy = _leader.GetNearestEnemiesInLOS();
             _leader.SetColor(Color.red);
+            _leader.team.OnLaderChangedState?.Invoke(LeaderBehaviours.Attack);
         }
 
         public void OnExit()

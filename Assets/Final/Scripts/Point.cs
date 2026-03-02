@@ -10,6 +10,7 @@ namespace Final.Scripts
         public List<Point> visiblePoints = new();
         public bool outConnections;
         public bool inConnections;
+        public bool movingPoing;
 
         private void OnDrawGizmos() {
             if (!Application.isPlaying || !PointManager.Instance.drawLines || neighbours == null) return; 

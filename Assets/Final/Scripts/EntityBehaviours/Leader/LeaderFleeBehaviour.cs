@@ -20,6 +20,7 @@ namespace Final.Scripts.EntityBehaviours
         {
             _leader.SetColor(Color.blue);
             StartPath(_leader.team.teamBase);
+            _leader.team.OnLaderChangedState?.Invoke(LeaderBehaviours.Flee);
         }
 
         public void OnExit()
@@ -38,6 +39,11 @@ namespace Final.Scripts.EntityBehaviours
             {
                 return;
             };
+            
+            if (_path.Peek().movingPoing && !PointManager.Instance.ArePointsInView(_path.Peek(), _leader._point)) {
+                StartPath(_leader.team.teamBase);
+                return;
+            }
             
             Vector2 distanceVector = _path.Peek().transform.position - _leader.transform.position;
             float distance = distanceVector.magnitude;

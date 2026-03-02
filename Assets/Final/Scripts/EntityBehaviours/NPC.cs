@@ -1,39 +1,32 @@
-using System;
 using System.Collections.Generic;
-using Final.Scripts.EntityBehaviours;
-using Final.Scripts.EntitySettings;
 using Parcial_2.Scripts;
-using StateMachine;
 using UnityEngine;
+using StateMachine;
 
-namespace Final.Scripts
-{
-    public class Leader : MonoBehaviour, IEntity
-    {
-        [SerializeField] public LeaderSettingsSO settings;
+namespace Final.Scripts.EntityBehaviours {
+    public class NPC : MonoBehaviour, IEntity {
+        [SerializeField] public NPCSettingsSO settings;
         [SerializeField] [Range(-Mathf.PI, Mathf.PI)] public double _viewDetectionAngleOffset;
         
         public Point _point { get; private set; }
-        [SerializeField] public Point _goal;
         private PointManager _pointManager;
-        private StateMachine<LeaderBehaviours> _stateMachine;
+        private StateMachine<NPCBehaviours> _stateMachine;
         [SerializeField] private int health;
         [SerializeField] private SpriteRenderer sprite;
         public Team team;
-        public Action<Vector2> OnGotHit;
         
         private void Start() {
             _point = GetComponent<Point>();
             health = settings.MaxHealth;
             _pointManager = PointManager.Instance;
             _stateMachine = new();
-            _stateMachine.AddState(LeaderBehaviours.Move, new LeaderMoveBehaviour(_stateMachine, this, _goal));
-            _stateMachine.AddState(LeaderBehaviours.Attack, new LeaderAttackBehaviour(_stateMachine, this));
-            _stateMachine.AddState(LeaderBehaviours.Flee, new LeaderFleeBehaviour(_stateMachine, this));
-            _stateMachine.AddState(LeaderBehaviours.Idle, new LeaderIdleBehaviour(_stateMachine, this));
-            _stateMachine.ChangeState(LeaderBehaviours.Idle);
+            _stateMachine.AddState(NPCBehaviours.Move, new NPCMoveBehaviour(_stateMachine, this));
+            _stateMachine.AddState(NPCBehaviours.Idle, new NPCIdleBehaviour(_stateMachine, this));
+            _stateMachine.AddState(NPCBehaviours.Attack, new NPCAttackBehaviour(_stateMachine, this));
+            _stateMachine.AddState(NPCBehaviours.Flee, new NPCFleeBehaviour(_stateMachine, this));
+            _stateMachine.ChangeState(NPCBehaviours.Idle);
         }
-
+        
         private void Update()
         {
             _stateMachine.UpdateState(Time.deltaTime);
@@ -42,16 +35,14 @@ namespace Final.Scripts
         public void TakeDamage(int dmg)
         {
             health -= dmg;
-            
             if (health > settings.MaxHealth) health = settings.MaxHealth;
             if (health <= 0)
             {
                 PointManager.Instance.RemovePoint(GetComponent<Point>());
-                PointManager.Instance.RemovePoint(_goal);
-                Destroy(_goal.gameObject);
                 Destroy(gameObject);
             }
         }
+        
 
         public int GetHealth() => health;
         public GameObject GetGameObject()
@@ -71,7 +62,7 @@ namespace Final.Scripts
         public void SetColor(Color color) {
             sprite.color = color;
         }
-
+        
         public List<IEntity> GetEnemiesInLOS()
         {
             List<IEntity> res = new();
