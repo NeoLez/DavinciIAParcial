@@ -40,6 +40,7 @@ namespace Final.Scripts
         public void TakeDamage(int dmg)
         {
             health -= dmg;
+            if (health > settings.MaxHealth) health = settings.MaxHealth;
             if (health <= 0)
             {
                 PointManager.Instance.RemovePoint(GetComponent<Point>());
