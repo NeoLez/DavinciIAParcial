@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 860784096221667432}
   - component: {fileID: 2286350554778954644}
   - component: {fileID: 2958502046802789319}
-  m_Layer: 0
+  - component: {fileID: 2929421335013311954}
+  m_Layer: 7
   m_Name: NPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -64,10 +65,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 85f21aa4e1c9ad558803b7eb16e26df1, type: 2}
   _viewDetectionAngleOffset: 0
-  _goal: {fileID: 2286350554778954644}
   health: 0
   sprite: {fileID: 1421498770100919538}
+  entityLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  wallLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   team: {fileID: 0}
+  velocity: {x: 0, y: 0}
+--- !u!58 &2929421335013311954
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553504278898626265}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.25
 --- !u!1 &2102873716638285024
 GameObject:
   m_ObjectHideFlags: 0

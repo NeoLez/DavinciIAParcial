@@ -45,11 +45,11 @@ namespace Final.Scripts.EntityBehaviours
                 return;
             }
 
-            if (closestEnemy == null || !_leader.IsPointInLOS(closestEnemy.GetGameObject().transform.position))
+            if (closestEnemy as Object == null || !_leader.IsPointInLOS(closestEnemy.GetGameObject().transform.position))
             {
                 closestEnemy = _leader.GetNearestEnemiesInLOS();
                 
-                if (closestEnemy == null)
+                if (closestEnemy as Object == null)
                 {
                     _stateMachine.ChangeState(LeaderBehaviours.Move);
                     return;

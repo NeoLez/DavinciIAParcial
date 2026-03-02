@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Parcial_2.Scripts;
 using UnityEngine;
@@ -13,10 +14,13 @@ namespace Final.Scripts.EntityBehaviours {
         private StateMachine<NPCBehaviours> _stateMachine;
         [SerializeField] private int health;
         [SerializeField] private SpriteRenderer sprite;
+        [SerializeField] private LayerMask entityLayerMask;
+        [SerializeField] private LayerMask wallLayerMask;
         public Team team;
         
         private void Start() {
             _point = GetComponent<Point>();
+            GetComponent<CircleCollider2D>().radius = settings.Size;
             health = settings.MaxHealth;
             _pointManager = PointManager.Instance;
             _stateMachine = new();
@@ -30,6 +34,43 @@ namespace Final.Scripts.EntityBehaviours {
         private void Update()
         {
             _stateMachine.UpdateState(Time.deltaTime);
+            ProcessMovement();
+        }
+
+        public Vector2 Separation() {
+            Vector2 res = Vector2.zero;
+            int total = 0;
+
+            var hits = Physics2D.OverlapCircleAll(transform.position, settings.FlockingAreaScanSize, entityLayerMask);
+            foreach (var hit in hits) {
+                if (hit.gameObject == gameObject) continue;
+
+                var entity = hit.GetComponent<IEntity>();
+                var go = entity.GetGameObject();
+                var distance = Vector2.Distance(transform.position, go.transform.position);
+                
+                if (distance < settings.SeparationRadius) {
+                    res += (Vector2)((1 / (distance/settings.SeparationRadius) - 1) * settings.VelocitySeparation * (transform.position - go.transform.position).normalized);
+                }
+
+                total++;
+            }
+            
+            return total == 0 ? Vector2.zero : res / total;
+        }
+        
+        public Vector2 velocity;
+        protected void ProcessMovement() {
+            if (velocity.magnitude > settings.Speed) {
+                velocity.Normalize();
+                velocity *= settings.Speed;
+            }
+            
+            _viewDetectionAngleOffset = Mathf.Atan2(velocity.y, velocity.x);
+            var hit = Physics2D.Raycast(transform.position, velocity.normalized, velocity.magnitude * Time.deltaTime, wallLayerMask);
+            var distance = hit.collider == null ? Time.deltaTime : hit.distance;
+            transform.position += (Vector3)(velocity * Time.deltaTime);
+            velocity *= 0.3f;
         }
 
         public void TakeDamage(int dmg)
@@ -38,6 +79,7 @@ namespace Final.Scripts.EntityBehaviours {
             if (health > settings.MaxHealth) health = settings.MaxHealth;
             if (health <= 0)
             {
+                Debug.Log("Death "+name);
                 PointManager.Instance.RemovePoint(GetComponent<Point>());
                 Destroy(gameObject);
             }

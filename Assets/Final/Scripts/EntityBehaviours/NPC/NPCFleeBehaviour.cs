@@ -34,7 +34,7 @@ namespace Final.Scripts.EntityBehaviours {
                 return;
             };
             
-            if (_path.Peek().movingPoing && !PointManager.Instance.ArePointsInView(_path.Peek(), _npc._point)) {
+            if (!PointManager.Instance.ArePointsInView(_path.Peek(), _npc._point)) {
                 StartPath(_npc.team.teamBase);
                 return;
             }
@@ -49,8 +49,7 @@ namespace Final.Scripts.EntityBehaviours {
                 _path.Pop();
             }
 
-            _npc.transform.position += (Vector3)(direction * maxDistanceThisFrame);
-            _npc._viewDetectionAngleOffset = Mathf.Atan2(distanceVector.y,distanceVector.x);
+            _npc.velocity += direction * _npc.settings.VelocityMove;
         }
         
         private void StartPath(Point goal)

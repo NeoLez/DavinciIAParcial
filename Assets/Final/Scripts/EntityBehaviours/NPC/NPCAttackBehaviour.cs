@@ -39,11 +39,11 @@ namespace Final.Scripts.EntityBehaviours {
                 return;
             }
 
-            if (closestEnemy == null || !_npc.IsPointInLOS(closestEnemy.GetGameObject().transform.position))
+            if (closestEnemy as Object == null || !_npc.IsPointInLOS(closestEnemy.GetGameObject().transform.position))
             {
                 closestEnemy = _npc.GetNearestEnemiesInLOS();
                 
-                if (closestEnemy == null)
+                if (closestEnemy as Object == null)
                 {
                     _stateMachine.ChangeState(NPCBehaviours.Move);
                     return;
@@ -61,10 +61,7 @@ namespace Final.Scripts.EntityBehaviours {
                 maxDistanceThisFrame += distanceNextFrame - closestEnemy.GetSize();
             }
             
-            
-            _npc.transform.position += (Vector3)(differenceVector * maxDistanceThisFrame);
-            
-            _npc._viewDetectionAngleOffset = Mathf.Atan2(differenceVector.y,differenceVector.x);
+            _npc.velocity += differenceVector * _npc.settings.VelocityMove;
 
 
             if (nextAttackTime <= Time.time && distance <= _npc.settings.AttackDistance)

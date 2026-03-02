@@ -40,7 +40,6 @@ namespace Final.Scripts.EntityBehaviours {
             }
 
             if (Vector2.Distance(_npc.transform.position, _npc.team.leader.transform.position) > _npc.settings.LeaderCloseAreaRadius || !PointManager.Instance.ArePointsInView(_npc.team.leader._point, _npc._point)) {
-                Debug.Log("b");
                 _stateMachine.ChangeState(NPCBehaviours.Move);
             }
         }

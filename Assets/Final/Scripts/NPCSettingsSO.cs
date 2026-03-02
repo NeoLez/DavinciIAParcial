@@ -19,6 +19,10 @@ namespace Final.Scripts {
         [SerializeField] private float _onMoveAttackCooldown;
         [SerializeField] private float _size;
         [SerializeField] private float _leaderCloseAreaRadius;
+        [SerializeField] private float _flockingAreaScanSize;
+        [SerializeField] private float _velocityMove;
+        [SerializeField] private float _velocitySeparation;
+        [SerializeField] private float _separationRadius;
 
         public float SoundDetectionRadius => _soundDetectionRadius;
         public float ViewDetectionRadius => _viewDetectionRadius;
@@ -36,5 +40,9 @@ namespace Final.Scripts {
         public float OnMoveAttackCooldown => _onMoveAttackCooldown;
         public float Size => _size;
         public float LeaderCloseAreaRadius => _leaderCloseAreaRadius;
+        public float FlockingAreaScanSize => _flockingAreaScanSize;
+        public float VelocityMove => _velocityMove;
+        public float VelocitySeparation => _velocitySeparation;
+        public float SeparationRadius => _separationRadius;
     }
 }

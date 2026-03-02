@@ -64,10 +64,11 @@ namespace Final.Scripts
 
         public void RemovePoint(Point point) {
             if (!_points.Contains(point)) return;
-
-            foreach (var n in point.neighbours) {
-                n.neighbours.Remove(point);
+            
+            foreach (var p in _points) {
+                p.neighbours.Remove(point);
             }
+            
 
             _points.Remove(point);
         }

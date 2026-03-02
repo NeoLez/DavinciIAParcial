@@ -45,7 +45,7 @@ namespace Final.Scripts.EntityBehaviours {
                 return;
             }
 
-            if (_path.Peek().movingPoing && !PointManager.Instance.ArePointsInView(_path.Peek(), _npc._point)) {
+            if (!PointManager.Instance.ArePointsInView(_path.Peek(), _npc._point)) {
                 StartPath();
                 return;
             }
@@ -55,13 +55,14 @@ namespace Final.Scripts.EntityBehaviours {
             Vector2 direction = distanceVector / distance;
             float maxDistanceThisFrame = _npc.settings.Speed * Time.deltaTime;
 
-            if (distance <= maxDistanceThisFrame)
+
+            _npc.velocity += _npc.Separation();
+            _npc.velocity += direction * _npc.settings.VelocityMove;
+            
+            if (distance <= _npc.velocity.magnitude * Time.deltaTime)
             {
                 _path.Pop();
             }
-
-            _npc.transform.position += (Vector3)(direction * maxDistanceThisFrame);
-            _npc._viewDetectionAngleOffset = Mathf.Atan2(distanceVector.y,distanceVector.x);
         }
         
         private void StartPath() {

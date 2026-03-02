@@ -15,7 +15,7 @@ MonoBehaviour:
   _soundDetectionRadius: 1
   _viewDetectionRadius: 8
   _viewDetectionAngle: 1.2
-  _speed: 6
+  _speed: 4
   _attackDistance: 1.5
   _showViewCone: 1
   _showSoundDetectionSphere: 1
@@ -28,5 +28,9 @@ MonoBehaviour:
   _attackCooldown: 1
   _attackDamage: 1
   _onMoveAttackCooldown: 1
-  _size: 0.5
+  _size: 0.25
   _leaderCloseAreaRadius: 5
+  _flockingAreaScanSize: 4
+  _velocityMove: 3
+  _velocitySeparation: 1
+  _separationRadius: 4

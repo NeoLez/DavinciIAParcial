@@ -40,7 +40,7 @@ namespace Final.Scripts.EntityBehaviours
                 return;
             };
             
-            if (_path.Peek().movingPoing && !PointManager.Instance.ArePointsInView(_path.Peek(), _leader._point)) {
+            if (!PointManager.Instance.ArePointsInView(_path.Peek(), _leader._point)) {
                 StartPath(_leader.team.teamBase);
                 return;
             }

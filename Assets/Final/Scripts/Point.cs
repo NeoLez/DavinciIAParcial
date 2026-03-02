@@ -6,11 +6,10 @@ namespace Final.Scripts
 {
     public class Point : MonoBehaviour
     {
-        public List<Point> neighbours = new();
-        public List<Point> visiblePoints = new();
+        [NonSerialized] public List<Point> neighbours = new();
+        [NonSerialized] public List<Point> visiblePoints = new();
         public bool outConnections;
         public bool inConnections;
-        public bool movingPoing;
 
         private void OnDrawGizmos() {
             if (!Application.isPlaying || !PointManager.Instance.drawLines || neighbours == null) return; 

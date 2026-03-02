@@ -46,6 +46,7 @@ namespace Final.Scripts
             if (health > settings.MaxHealth) health = settings.MaxHealth;
             if (health <= 0)
             {
+                Debug.Log("Death "+name);
                 PointManager.Instance.RemovePoint(GetComponent<Point>());
                 PointManager.Instance.RemovePoint(_goal);
                 Destroy(_goal.gameObject);
