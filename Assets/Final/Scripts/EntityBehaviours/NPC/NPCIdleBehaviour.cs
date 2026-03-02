@@ -24,7 +24,6 @@ namespace Final.Scripts.EntityBehaviours {
 
         private void SwitchToMove(LeaderBehaviours behaviour) {
             if (behaviour == LeaderBehaviours.Move) {
-                Debug.Log("a");
                 _stateMachine.ChangeState(NPCBehaviours.Move);
             }
         }
@@ -39,6 +38,9 @@ namespace Final.Scripts.EntityBehaviours {
                 _stateMachine.ChangeState(NPCBehaviours.Attack);
             }
 
+            if (_npc.team.leader == null) {
+                return;
+            }
             if (Vector2.Distance(_npc.transform.position, _npc.team.leader.transform.position) > _npc.settings.LeaderCloseAreaRadius || !PointManager.Instance.ArePointsInView(_npc.team.leader._point, _npc._point)) {
                 _stateMachine.ChangeState(NPCBehaviours.Move);
             }

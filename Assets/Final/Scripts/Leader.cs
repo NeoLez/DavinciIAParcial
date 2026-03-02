@@ -51,6 +51,8 @@ namespace Final.Scripts
                 PointManager.Instance.RemovePoint(_goal);
                 Destroy(_goal.gameObject);
                 Destroy(gameObject);
+                
+                team.OnLeaderDefeated?.Invoke();
             }
         }
 

@@ -66,6 +66,10 @@ namespace Final.Scripts.EntityBehaviours {
         }
         
         private void StartPath() {
+            if (_npc.team.leader == null) {
+                _stateMachine.ChangeState(NPCBehaviours.Idle);
+                return;
+            }
             var _goal = _npc.team.leader._point;
             startAttackCooldown = Time.time + _npc.settings.OnMoveAttackCooldown;
             PointManager.Instance.UpdatePoint(_goal);

@@ -28,9 +28,19 @@ namespace Final.Scripts.EntityBehaviours {
             _stateMachine.AddState(NPCBehaviours.Idle, new NPCIdleBehaviour(_stateMachine, this));
             _stateMachine.AddState(NPCBehaviours.Attack, new NPCAttackBehaviour(_stateMachine, this));
             _stateMachine.AddState(NPCBehaviours.Flee, new NPCFleeBehaviour(_stateMachine, this));
+            _stateMachine.AddState(NPCBehaviours.Surrender, new NPCSurrenderBehaviour(_stateMachine, this));
             _stateMachine.ChangeState(NPCBehaviours.Idle);
+            team.OnLeaderDefeated += OnLeaderDied;
         }
-        
+
+        private void OnDestroy() {
+            team.OnLeaderDefeated -= OnLeaderDied;
+        }
+
+        private void OnLeaderDied() {
+            _stateMachine.ChangeState(NPCBehaviours.Surrender);
+        }
+
         private void Update()
         {
             _stateMachine.UpdateState(Time.deltaTime);
@@ -50,7 +60,7 @@ namespace Final.Scripts.EntityBehaviours {
                 var distance = Vector2.Distance(transform.position, go.transform.position);
                 
                 if (distance < settings.SeparationRadius) {
-                    res += (Vector2)((1 / (distance/settings.SeparationRadius) - 1) * settings.VelocitySeparation * (transform.position - go.transform.position).normalized);
+                    res += (Vector2)(transform.position - go.transform.position).normalized * Math.Min(((1 / (distance / settings.SeparationRadius) - 1) * settings.VelocitySeparation), settings.Speed*4);
                 }
 
                 total++;
@@ -68,8 +78,8 @@ namespace Final.Scripts.EntityBehaviours {
             
             _viewDetectionAngleOffset = Mathf.Atan2(velocity.y, velocity.x);
             var hit = Physics2D.Raycast(transform.position, velocity.normalized, velocity.magnitude * Time.deltaTime, wallLayerMask);
-            var distance = hit.collider == null ? Time.deltaTime : hit.distance;
-            transform.position += (Vector3)(velocity * Time.deltaTime);
+            var distance = hit.collider == null ? Time.deltaTime : hit.distance * 0.9f;
+            transform.position += (Vector3)(velocity * distance);
             velocity *= 0.3f;
         }
 

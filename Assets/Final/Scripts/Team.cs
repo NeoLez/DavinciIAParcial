@@ -11,5 +11,6 @@ namespace Final.Scripts
         //public List<NPC> npcs = new();
         public Point teamBase;
         public Action<LeaderBehaviours> OnLaderChangedState;
+        public Action OnLeaderDefeated;
     }
 }

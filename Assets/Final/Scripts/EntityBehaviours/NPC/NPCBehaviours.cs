@@ -6,5 +6,6 @@ namespace Final.Scripts.EntityBehaviours
         Move,
         Flee,
         Idle,
+        Surrender,
     }
 }

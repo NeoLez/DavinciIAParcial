@@ -17,8 +17,8 @@ MonoBehaviour:
   _viewDetectionAngle: 1.2
   _speed: 4
   _attackDistance: 1.5
-  _showViewCone: 1
-  _showSoundDetectionSphere: 1
+  _showViewCone: 0
+  _showSoundDetectionSphere: 0
   _gizmoResolution: 6
   _maxHealth: 6
   _fleeHealth: 2
